@@ -1,16 +1,16 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import Spotify from 'spotify';
+import Spotify from 'spotify-ts';
 
 const client = new Spotify({
-  apiKey: 'My API Key',
+  accessToken: 'My Access Token',
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
 describe('resource recommendations', () => {
   // Prism tests are disabled
-  test.skip('list', async () => {
-    const responsePromise = client.recommendations.list();
+  test.skip('get', async () => {
+    const responsePromise = client.recommendations.get();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -21,10 +21,10 @@ describe('resource recommendations', () => {
   });
 
   // Prism tests are disabled
-  test.skip('list: request options and params are passed correctly', async () => {
+  test.skip('get: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.recommendations.list(
+      client.recommendations.get(
         {
           limit: 10,
           market: 'ES',

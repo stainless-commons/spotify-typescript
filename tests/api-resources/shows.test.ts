@@ -1,9 +1,9 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import Spotify from 'spotify';
+import Spotify from 'spotify-ts';
 
 const client = new Spotify({
-  apiKey: 'My API Key',
+  accessToken: 'My Access Token',
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
@@ -29,8 +29,10 @@ describe('resource shows', () => {
   });
 
   // Prism tests are disabled
-  test.skip('list: only required params', async () => {
-    const responsePromise = client.shows.list({ ids: '5CfCWKI5pZ28U0uOzXkDHe,5as3aKmN2k11yfDDDSrvaZ' });
+  test.skip('bulkRetrieve: only required params', async () => {
+    const responsePromise = client.shows.bulkRetrieve({
+      ids: '5CfCWKI5pZ28U0uOzXkDHe,5as3aKmN2k11yfDDDSrvaZ',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -41,16 +43,16 @@ describe('resource shows', () => {
   });
 
   // Prism tests are disabled
-  test.skip('list: required and optional params', async () => {
-    const response = await client.shows.list({
+  test.skip('bulkRetrieve: required and optional params', async () => {
+    const response = await client.shows.bulkRetrieve({
       ids: '5CfCWKI5pZ28U0uOzXkDHe,5as3aKmN2k11yfDDDSrvaZ',
       market: 'ES',
     });
   });
 
   // Prism tests are disabled
-  test.skip('getEpisodes', async () => {
-    const responsePromise = client.shows.getEpisodes('38bS44xjbVVZ3No3ByF1dJ');
+  test.skip('listEpisodes', async () => {
+    const responsePromise = client.shows.listEpisodes('38bS44xjbVVZ3No3ByF1dJ');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -61,10 +63,10 @@ describe('resource shows', () => {
   });
 
   // Prism tests are disabled
-  test.skip('getEpisodes: request options and params are passed correctly', async () => {
+  test.skip('listEpisodes: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.shows.getEpisodes(
+      client.shows.listEpisodes(
         '38bS44xjbVVZ3No3ByF1dJ',
         {
           limit: 10,

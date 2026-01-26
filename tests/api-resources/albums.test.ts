@@ -1,9 +1,9 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import Spotify from 'spotify';
+import Spotify from 'spotify-ts';
 
 const client = new Spotify({
-  apiKey: 'My API Key',
+  accessToken: 'My Access Token',
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
@@ -33,8 +33,8 @@ describe('resource albums', () => {
   });
 
   // Prism tests are disabled
-  test.skip('list: only required params', async () => {
-    const responsePromise = client.albums.list({
+  test.skip('bulkRetrieve: only required params', async () => {
+    const responsePromise = client.albums.bulkRetrieve({
       ids: '382ObEPsp2rxGrnsizN5TX,1A2GTWGtFfWp7KSQTwWOyo,2noRn2Aes5aoNVsU6iWThc',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -47,16 +47,16 @@ describe('resource albums', () => {
   });
 
   // Prism tests are disabled
-  test.skip('list: required and optional params', async () => {
-    const response = await client.albums.list({
+  test.skip('bulkRetrieve: required and optional params', async () => {
+    const response = await client.albums.bulkRetrieve({
       ids: '382ObEPsp2rxGrnsizN5TX,1A2GTWGtFfWp7KSQTwWOyo,2noRn2Aes5aoNVsU6iWThc',
       market: 'ES',
     });
   });
 
   // Prism tests are disabled
-  test.skip('getTracks', async () => {
-    const responsePromise = client.albums.getTracks('4aawyAB9vmqN3uQ7FjRGTy');
+  test.skip('listTracks', async () => {
+    const responsePromise = client.albums.listTracks('4aawyAB9vmqN3uQ7FjRGTy');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -67,10 +67,10 @@ describe('resource albums', () => {
   });
 
   // Prism tests are disabled
-  test.skip('getTracks: request options and params are passed correctly', async () => {
+  test.skip('listTracks: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.albums.getTracks(
+      client.albums.listTracks(
         '4aawyAB9vmqN3uQ7FjRGTy',
         {
           limit: 10,

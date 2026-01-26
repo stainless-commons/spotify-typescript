@@ -1,9 +1,9 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import Spotify from 'spotify';
+import Spotify from 'spotify-ts';
 
 const client = new Spotify({
-  apiKey: 'My API Key',
+  accessToken: 'My Access Token',
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
@@ -44,33 +44,6 @@ describe('resource player', () => {
   });
 
   // Prism tests are disabled
-  test.skip('getRecentlyPlayed', async () => {
-    const responsePromise = client.me.player.getRecentlyPlayed();
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  // Prism tests are disabled
-  test.skip('getRecentlyPlayed: request options and params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.me.player.getRecentlyPlayed(
-        {
-          after: 1484811043508,
-          before: 0,
-          limit: 10,
-        },
-        { path: '/_stainless_unknown_path' },
-      ),
-    ).rejects.toThrow(Spotify.NotFoundError);
-  });
-
-  // Prism tests are disabled
   test.skip('getState', async () => {
     const responsePromise = client.me.player.getState();
     const rawResponse = await responsePromise.asResponse();
@@ -88,6 +61,33 @@ describe('resource player', () => {
     await expect(
       client.me.player.getState(
         { additional_types: 'additional_types', market: 'ES' },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Spotify.NotFoundError);
+  });
+
+  // Prism tests are disabled
+  test.skip('listRecentlyPlayed', async () => {
+    const responsePromise = client.me.player.listRecentlyPlayed();
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  // Prism tests are disabled
+  test.skip('listRecentlyPlayed: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.me.player.listRecentlyPlayed(
+        {
+          after: 1484811043508,
+          before: 0,
+          limit: 10,
+        },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Spotify.NotFoundError);
@@ -117,8 +117,8 @@ describe('resource player', () => {
   });
 
   // Prism tests are disabled
-  test.skip('seek: only required params', async () => {
-    const responsePromise = client.me.player.seek({ position_ms: 25000 });
+  test.skip('seekToPosition: only required params', async () => {
+    const responsePromise = client.me.player.seekToPosition({ position_ms: 25000 });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -129,16 +129,16 @@ describe('resource player', () => {
   });
 
   // Prism tests are disabled
-  test.skip('seek: required and optional params', async () => {
-    const response = await client.me.player.seek({
+  test.skip('seekToPosition: required and optional params', async () => {
+    const response = await client.me.player.seekToPosition({
       position_ms: 25000,
       device_id: '0d1841b0976bae2a3a310dd74c0f3df354899bc8',
     });
   });
 
   // Prism tests are disabled
-  test.skip('setRepeat: only required params', async () => {
-    const responsePromise = client.me.player.setRepeat({ state: 'context' });
+  test.skip('setRepeatMode: only required params', async () => {
+    const responsePromise = client.me.player.setRepeatMode({ state: 'context' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -149,8 +149,8 @@ describe('resource player', () => {
   });
 
   // Prism tests are disabled
-  test.skip('setRepeat: required and optional params', async () => {
-    const response = await client.me.player.setRepeat({
+  test.skip('setRepeatMode: required and optional params', async () => {
+    const response = await client.me.player.setRepeatMode({
       state: 'context',
       device_id: '0d1841b0976bae2a3a310dd74c0f3df354899bc8',
     });
@@ -244,6 +244,7 @@ describe('resource player', () => {
           context_uri: 'spotify:album:5ht7ItJgpBH7W6vJ5BqpPr',
           offset: { position: 'bar' },
           position_ms: 0,
+          published: true,
           uris: ['string'],
         },
         { path: '/_stainless_unknown_path' },
@@ -285,6 +286,10 @@ describe('resource player', () => {
 
   // Prism tests are disabled
   test.skip('transfer: required and optional params', async () => {
-    const response = await client.me.player.transfer({ device_ids: ['74ASZWbe4lXaubB36ztrGX'], play: true });
+    const response = await client.me.player.transfer({
+      device_ids: ['74ASZWbe4lXaubB36ztrGX'],
+      play: true,
+      published: true,
+    });
   });
 });

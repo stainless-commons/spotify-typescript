@@ -1,5 +1,5 @@
-import { multipartFormRequestOptions, createForm } from 'spotify/internal/uploads';
-import { toFile } from 'spotify/core/uploads';
+import { multipartFormRequestOptions, createForm } from 'spotify-ts/internal/uploads';
+import { toFile } from 'spotify-ts/core/uploads';
 
 describe('form data validation', () => {
   test('valid values do not error', async () => {

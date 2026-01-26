@@ -1,7 +1,9 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
+import * as Shared from '../shared';
 import { APIPromise } from '../../core/api-promise';
+import { CursorURLPage, PagePromise } from '../../core/pagination';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
 
@@ -25,8 +27,11 @@ export class Categories extends APIResource {
   list(
     query: CategoryListParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<CategoryListResponse> {
-    return this._client.get('/browse/categories', { query, ...options });
+  ): PagePromise<CategoryListResponsesCursorURLPage, CategoryListResponse> {
+    return this._client.getAPIList('/browse/categories', CursorURLPage<CategoryListResponse>, {
+      query,
+      ...options,
+    });
   }
 
   /**
@@ -43,6 +48,8 @@ export class Categories extends APIResource {
   }
 }
 
+export type CategoryListResponsesCursorURLPage = CursorURLPage<CategoryListResponse>;
+
 export interface CategoryRetrieveResponse {
   /**
    * The [Spotify category ID](/documentation/web-api/concepts/spotify-uris-ids) of
@@ -58,115 +65,53 @@ export interface CategoryRetrieveResponse {
   /**
    * The category icon, in various sizes.
    */
-  icons: Array<CategoryRetrieveResponse.Icon>;
+  icons: Array<Shared.ImageObject>;
 
   /**
    * The name of the category.
    */
   name: string;
-}
 
-export namespace CategoryRetrieveResponse {
-  export interface Icon {
-    /**
-     * The image height in pixels.
-     */
-    height: number | null;
-
-    /**
-     * The source URL of the image.
-     */
-    url: string;
-
-    /**
-     * The image width in pixels.
-     */
-    width: number | null;
-  }
+  /**
+   * The playlist's public/private status (if it should be added to the user's
+   * profile or not): `true` the playlist will be public, `false` the playlist will
+   * be private, `null` the playlist status is not relevant. For more about
+   * public/private status, see
+   * [Working with Playlists](/documentation/web-api/concepts/playlists)
+   */
+  published?: boolean;
 }
 
 export interface CategoryListResponse {
-  categories: CategoryListResponse.Categories;
-}
+  /**
+   * The [Spotify category ID](/documentation/web-api/concepts/spotify-uris-ids) of
+   * the category.
+   */
+  id: string;
 
-export namespace CategoryListResponse {
-  export interface Categories {
-    /**
-     * A link to the Web API endpoint returning the full result of the request
-     */
-    href: string;
+  /**
+   * A link to the Web API endpoint returning full details of the category.
+   */
+  href: string;
 
-    items: Array<Categories.Item>;
+  /**
+   * The category icon, in various sizes.
+   */
+  icons: Array<Shared.ImageObject>;
 
-    /**
-     * The maximum number of items in the response (as set in the query or by default).
-     */
-    limit: number;
+  /**
+   * The name of the category.
+   */
+  name: string;
 
-    /**
-     * URL to the next page of items. ( `null` if none)
-     */
-    next: string | null;
-
-    /**
-     * The offset of the items returned (as set in the query or by default)
-     */
-    offset: number;
-
-    /**
-     * URL to the previous page of items. ( `null` if none)
-     */
-    previous: string | null;
-
-    /**
-     * The total number of items available to return.
-     */
-    total: number;
-  }
-
-  export namespace Categories {
-    export interface Item {
-      /**
-       * The [Spotify category ID](/documentation/web-api/concepts/spotify-uris-ids) of
-       * the category.
-       */
-      id: string;
-
-      /**
-       * A link to the Web API endpoint returning full details of the category.
-       */
-      href: string;
-
-      /**
-       * The category icon, in various sizes.
-       */
-      icons: Array<Item.Icon>;
-
-      /**
-       * The name of the category.
-       */
-      name: string;
-    }
-
-    export namespace Item {
-      export interface Icon {
-        /**
-         * The image height in pixels.
-         */
-        height: number | null;
-
-        /**
-         * The source URL of the image.
-         */
-        url: string;
-
-        /**
-         * The image width in pixels.
-         */
-        width: number | null;
-      }
-    }
-  }
+  /**
+   * The playlist's public/private status (if it should be added to the user's
+   * profile or not): `true` the playlist will be public, `false` the playlist will
+   * be private, `null` the playlist status is not relevant. For more about
+   * public/private status, see
+   * [Working with Playlists](/documentation/web-api/concepts/playlists)
+   */
+  published?: boolean;
 }
 
 export interface CategoryGetPlaylistsResponse {
@@ -175,225 +120,16 @@ export interface CategoryGetPlaylistsResponse {
    */
   message?: string;
 
-  playlists?: CategoryGetPlaylistsResponse.Playlists;
-}
+  playlists?: Shared.PagingPlaylistObject;
 
-export namespace CategoryGetPlaylistsResponse {
-  export interface Playlists {
-    /**
-     * A link to the Web API endpoint returning the full result of the request
-     */
-    href: string;
-
-    items: Array<Playlists.Item>;
-
-    /**
-     * The maximum number of items in the response (as set in the query or by default).
-     */
-    limit: number;
-
-    /**
-     * URL to the next page of items. ( `null` if none)
-     */
-    next: string | null;
-
-    /**
-     * The offset of the items returned (as set in the query or by default)
-     */
-    offset: number;
-
-    /**
-     * URL to the previous page of items. ( `null` if none)
-     */
-    previous: string | null;
-
-    /**
-     * The total number of items available to return.
-     */
-    total: number;
-  }
-
-  export namespace Playlists {
-    export interface Item {
-      /**
-       * The [Spotify ID](/documentation/web-api/concepts/spotify-uris-ids) for the
-       * playlist.
-       */
-      id?: string;
-
-      /**
-       * `true` if the owner allows other users to modify the playlist.
-       */
-      collaborative?: boolean;
-
-      /**
-       * The playlist description. _Only returned for modified, verified playlists,
-       * otherwise_ `null`.
-       */
-      description?: string;
-
-      /**
-       * Known external URLs for this playlist.
-       */
-      external_urls?: Item.ExternalURLs;
-
-      /**
-       * A link to the Web API endpoint providing full details of the playlist.
-       */
-      href?: string;
-
-      /**
-       * Images for the playlist. The array may be empty or contain up to three images.
-       * The images are returned by size in descending order. See
-       * [Working with Playlists](/documentation/web-api/concepts/playlists). _**Note**:
-       * If returned, the source URL for the image (`url`) is temporary and will expire
-       * in less than a day._
-       */
-      images?: Array<Item.Image>;
-
-      /**
-       * The name of the playlist.
-       */
-      name?: string;
-
-      /**
-       * The user who owns the playlist
-       */
-      owner?: Item.Owner;
-
-      /**
-       * The playlist's public/private status (if it is added to the user's profile):
-       * `true` the playlist is public, `false` the playlist is private, `null` the
-       * playlist status is not relevant. For more about public/private status, see
-       * [Working with Playlists](/documentation/web-api/concepts/playlists)
-       */
-      public?: boolean;
-
-      /**
-       * The version identifier for the current playlist. Can be supplied in other
-       * requests to target a specific playlist version
-       */
-      snapshot_id?: string;
-
-      /**
-       * A collection containing a link ( `href` ) to the Web API endpoint where full
-       * details of the playlist's tracks can be retrieved, along with the `total` number
-       * of tracks in the playlist. Note, a track object may be `null`. This can happen
-       * if a track is no longer available.
-       */
-      tracks?: Item.Tracks;
-
-      /**
-       * The object type: "playlist"
-       */
-      type?: string;
-
-      /**
-       * The [Spotify URI](/documentation/web-api/concepts/spotify-uris-ids) for the
-       * playlist.
-       */
-      uri?: string;
-    }
-
-    export namespace Item {
-      /**
-       * Known external URLs for this playlist.
-       */
-      export interface ExternalURLs {
-        /**
-         * The [Spotify URL](/documentation/web-api/concepts/spotify-uris-ids) for the
-         * object.
-         */
-        spotify?: string;
-      }
-
-      export interface Image {
-        /**
-         * The image height in pixels.
-         */
-        height: number | null;
-
-        /**
-         * The source URL of the image.
-         */
-        url: string;
-
-        /**
-         * The image width in pixels.
-         */
-        width: number | null;
-      }
-
-      /**
-       * The user who owns the playlist
-       */
-      export interface Owner {
-        /**
-         * The [Spotify user ID](/documentation/web-api/concepts/spotify-uris-ids) for this
-         * user.
-         */
-        id?: string;
-
-        /**
-         * The name displayed on the user's profile. `null` if not available.
-         */
-        display_name?: string | null;
-
-        /**
-         * Known public external URLs for this user.
-         */
-        external_urls?: Owner.ExternalURLs;
-
-        /**
-         * A link to the Web API endpoint for this user.
-         */
-        href?: string;
-
-        /**
-         * The object type.
-         */
-        type?: 'user';
-
-        /**
-         * The [Spotify URI](/documentation/web-api/concepts/spotify-uris-ids) for this
-         * user.
-         */
-        uri?: string;
-      }
-
-      export namespace Owner {
-        /**
-         * Known public external URLs for this user.
-         */
-        export interface ExternalURLs {
-          /**
-           * The [Spotify URL](/documentation/web-api/concepts/spotify-uris-ids) for the
-           * object.
-           */
-          spotify?: string;
-        }
-      }
-
-      /**
-       * A collection containing a link ( `href` ) to the Web API endpoint where full
-       * details of the playlist's tracks can be retrieved, along with the `total` number
-       * of tracks in the playlist. Note, a track object may be `null`. This can happen
-       * if a track is no longer available.
-       */
-      export interface Tracks {
-        /**
-         * A link to the Web API endpoint where full details of the playlist's tracks can
-         * be retrieved.
-         */
-        href?: string;
-
-        /**
-         * Number of tracks in the playlist.
-         */
-        total?: number;
-      }
-    }
-  }
+  /**
+   * The playlist's public/private status (if it should be added to the user's
+   * profile or not): `true` the playlist will be public, `false` the playlist will
+   * be private, `null` the playlist status is not relevant. For more about
+   * public/private status, see
+   * [Working with Playlists](/documentation/web-api/concepts/playlists)
+   */
+  published?: boolean;
 }
 
 export interface CategoryRetrieveParams {
@@ -453,6 +189,7 @@ export declare namespace Categories {
     type CategoryRetrieveResponse as CategoryRetrieveResponse,
     type CategoryListResponse as CategoryListResponse,
     type CategoryGetPlaylistsResponse as CategoryGetPlaylistsResponse,
+    type CategoryListResponsesCursorURLPage as CategoryListResponsesCursorURLPage,
     type CategoryRetrieveParams as CategoryRetrieveParams,
     type CategoryListParams as CategoryListParams,
     type CategoryGetPlaylistsParams as CategoryGetPlaylistsParams,

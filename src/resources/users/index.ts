@@ -3,7 +3,6 @@
 export {
   Playlists,
   type PlaylistCreateResponse,
-  type PlaylistListResponse,
   type PlaylistCreateParams,
   type PlaylistListParams,
 } from './playlists';

@@ -8,6 +8,7 @@ export {
   type AlbumCheckParams,
   type AlbumRemoveParams,
   type AlbumSaveParams,
+  type AlbumListResponsesCursorURLPage,
 } from './albums';
 export {
   Audiobooks,
@@ -17,6 +18,7 @@ export {
   type AudiobookCheckParams,
   type AudiobookRemoveParams,
   type AudiobookSaveParams,
+  type AudiobookListResponsesCursorURLPage,
 } from './audiobooks';
 export {
   Episodes,
@@ -26,12 +28,13 @@ export {
   type EpisodeCheckParams,
   type EpisodeRemoveParams,
   type EpisodeSaveParams,
+  type EpisodeListResponsesCursorURLPage,
 } from './episodes';
 export {
   Following,
-  type FollowingListResponse,
+  type FollowingBulkRetrieveResponse,
   type FollowingCheckResponse,
-  type FollowingListParams,
+  type FollowingBulkRetrieveParams,
   type FollowingCheckParams,
   type FollowingFollowParams,
   type FollowingUnfollowParams,
@@ -39,24 +42,27 @@ export {
 export { Me, type MeRetrieveResponse } from './me';
 export {
   Player,
+  type ContextObject,
+  type DeviceObject,
   type PlayerGetCurrentlyPlayingResponse,
   type PlayerGetDevicesResponse,
-  type PlayerGetRecentlyPlayedResponse,
   type PlayerGetStateResponse,
+  type PlayerListRecentlyPlayedResponse,
   type PlayerGetCurrentlyPlayingParams,
-  type PlayerGetRecentlyPlayedParams,
   type PlayerGetStateParams,
+  type PlayerListRecentlyPlayedParams,
   type PlayerPausePlaybackParams,
-  type PlayerSeekParams,
-  type PlayerSetRepeatParams,
+  type PlayerSeekToPositionParams,
+  type PlayerSetRepeatModeParams,
   type PlayerSetVolumeParams,
   type PlayerSkipNextParams,
   type PlayerSkipPreviousParams,
   type PlayerStartPlaybackParams,
   type PlayerToggleShuffleParams,
   type PlayerTransferParams,
+  type PlayerListRecentlyPlayedResponsesCursorURLPage,
 } from './player/index';
-export { Playlists, type PlaylistRetrieveResponse, type PlaylistRetrieveParams } from './playlists';
+export { Playlists, type PlaylistListParams } from './playlists';
 export {
   Shows,
   type ShowListResponse,
@@ -65,14 +71,9 @@ export {
   type ShowCheckParams,
   type ShowRemoveParams,
   type ShowSaveParams,
+  type ShowListResponsesCursorURLPage,
 } from './shows';
-export {
-  Top,
-  type TopGetArtistsResponse,
-  type TopGetTracksResponse,
-  type TopGetArtistsParams,
-  type TopGetTracksParams,
-} from './top';
+export { Top, type TopListTopArtistsParams, type TopListTopTracksParams } from './top';
 export {
   Tracks,
   type TrackListResponse,
@@ -81,4 +82,5 @@ export {
   type TrackCheckParams,
   type TrackRemoveParams,
   type TrackSaveParams,
+  type TrackListResponsesCursorURLPage,
 } from './tracks';

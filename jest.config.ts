@@ -7,8 +7,8 @@ const config: JestConfigWithTsJest = {
     '^.+\\.(t|j)sx?$': ['@swc/jest', { sourceMaps: 'inline' }],
   },
   moduleNameMapper: {
-    '^spotify$': '<rootDir>/src/index.ts',
-    '^spotify/(.*)$': '<rootDir>/src/$1',
+    '^spotify-ts$': '<rootDir>/src/index.ts',
+    '^spotify-ts/(.*)$': '<rootDir>/src/$1',
   },
   modulePathIgnorePatterns: [
     '<rootDir>/ecosystem-tests/',

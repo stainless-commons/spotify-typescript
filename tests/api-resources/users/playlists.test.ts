@@ -1,9 +1,9 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import Spotify from 'spotify';
+import Spotify from 'spotify-ts';
 
 const client = new Spotify({
-  apiKey: 'My API Key',
+  accessToken: 'My Access Token',
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
@@ -26,7 +26,7 @@ describe('resource playlists', () => {
       name: 'New Playlist',
       collaborative: true,
       description: 'New playlist description',
-      public: false,
+      published: true,
     });
   });
 
