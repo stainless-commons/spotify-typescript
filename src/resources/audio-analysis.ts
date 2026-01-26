@@ -18,21 +18,56 @@ export class AudioAnalysis extends APIResource {
   }
 }
 
+export interface TimeIntervalObject {
+  /**
+   * The confidence, from 0.0 to 1.0, of the reliability of the interval.
+   */
+  confidence?: number;
+
+  /**
+   * The duration (in seconds) of the time interval.
+   */
+  duration?: number;
+
+  /**
+   * The playlist's public/private status (if it should be added to the user's
+   * profile or not): `true` the playlist will be public, `false` the playlist will
+   * be private, `null` the playlist status is not relevant. For more about
+   * public/private status, see
+   * [Working with Playlists](/documentation/web-api/concepts/playlists)
+   */
+  published?: boolean;
+
+  /**
+   * The starting point (in seconds) of the time interval.
+   */
+  start?: number;
+}
+
 export interface AudioAnalysisRetrieveResponse {
   /**
    * The time intervals of the bars throughout the track. A bar (or measure) is a
    * segment of time defined as a given number of beats.
    */
-  bars?: Array<AudioAnalysisRetrieveResponse.Bar>;
+  bars?: Array<TimeIntervalObject>;
 
   /**
    * The time intervals of beats throughout the track. A beat is the basic time unit
    * of a piece of music; for example, each tick of a metronome. Beats are typically
    * multiples of tatums.
    */
-  beats?: Array<AudioAnalysisRetrieveResponse.Beat>;
+  beats?: Array<TimeIntervalObject>;
 
   meta?: AudioAnalysisRetrieveResponse.Meta;
+
+  /**
+   * The playlist's public/private status (if it should be added to the user's
+   * profile or not): `true` the playlist will be public, `false` the playlist will
+   * be private, `null` the playlist status is not relevant. For more about
+   * public/private status, see
+   * [Working with Playlists](/documentation/web-api/concepts/playlists)
+   */
+  published?: boolean;
 
   /**
    * Sections are defined by large variations in rhythm or timbre, e.g. chorus,
@@ -50,46 +85,12 @@ export interface AudioAnalysisRetrieveResponse {
    * A tatum represents the lowest regular pulse train that a listener intuitively
    * infers from the timing of perceived musical events (segments).
    */
-  tatums?: Array<AudioAnalysisRetrieveResponse.Tatum>;
+  tatums?: Array<TimeIntervalObject>;
 
   track?: AudioAnalysisRetrieveResponse.Track;
 }
 
 export namespace AudioAnalysisRetrieveResponse {
-  export interface Bar {
-    /**
-     * The confidence, from 0.0 to 1.0, of the reliability of the interval.
-     */
-    confidence?: number;
-
-    /**
-     * The duration (in seconds) of the time interval.
-     */
-    duration?: number;
-
-    /**
-     * The starting point (in seconds) of the time interval.
-     */
-    start?: number;
-  }
-
-  export interface Beat {
-    /**
-     * The confidence, from 0.0 to 1.0, of the reliability of the interval.
-     */
-    confidence?: number;
-
-    /**
-     * The duration (in seconds) of the time interval.
-     */
-    duration?: number;
-
-    /**
-     * The starting point (in seconds) of the time interval.
-     */
-    start?: number;
-  }
-
   export interface Meta {
     /**
      * The amount of time taken to analyze this track.
@@ -173,6 +174,15 @@ export namespace AudioAnalysisRetrieveResponse {
      * The confidence, from 0.0 to 1.0, of the reliability of the `mode`.
      */
     mode_confidence?: number;
+
+    /**
+     * The playlist's public/private status (if it should be added to the user's
+     * profile or not): `true` the playlist will be public, `false` the playlist will
+     * be private, `null` the playlist status is not relevant. For more about
+     * public/private status, see
+     * [Working with Playlists](/documentation/web-api/concepts/playlists)
+     */
+    published?: boolean;
 
     /**
      * The starting point (in seconds) of the section.
@@ -263,6 +273,15 @@ export namespace AudioAnalysisRetrieveResponse {
     pitches?: Array<number>;
 
     /**
+     * The playlist's public/private status (if it should be added to the user's
+     * profile or not): `true` the playlist will be public, `false` the playlist will
+     * be private, `null` the playlist status is not relevant. For more about
+     * public/private status, see
+     * [Working with Playlists](/documentation/web-api/concepts/playlists)
+     */
+    published?: boolean;
+
+    /**
      * The starting point (in seconds) of the segment.
      */
     start?: number;
@@ -289,23 +308,6 @@ export namespace AudioAnalysisRetrieveResponse {
      * in comparison with each other.
      */
     timbre?: Array<number>;
-  }
-
-  export interface Tatum {
-    /**
-     * The confidence, from 0.0 to 1.0, of the reliability of the interval.
-     */
-    confidence?: number;
-
-    /**
-     * The duration (in seconds) of the time interval.
-     */
-    duration?: number;
-
-    /**
-     * The starting point (in seconds) of the time interval.
-     */
-    start?: number;
   }
 
   export interface Track {
@@ -465,5 +467,8 @@ export namespace AudioAnalysisRetrieveResponse {
 }
 
 export declare namespace AudioAnalysis {
-  export { type AudioAnalysisRetrieveResponse as AudioAnalysisRetrieveResponse };
+  export {
+    type TimeIntervalObject as TimeIntervalObject,
+    type AudioAnalysisRetrieveResponse as AudioAnalysisRetrieveResponse,
+  };
 }

@@ -1,7 +1,10 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../core/resource';
+import * as AudiobooksAPI from './audiobooks';
+import * as Shared from './shared';
 import { APIPromise } from '../core/api-promise';
+import { CursorURLPage, PagePromise } from '../core/pagination';
 import { RequestOptions } from '../internal/request-options';
 import { path } from '../internal/utils/path';
 
@@ -23,7 +26,10 @@ export class Audiobooks extends APIResource {
    * Spotify IDs. Audiobooks are only available within the US, UK, Canada, Ireland,
    * New Zealand and Australia markets.
    */
-  list(query: AudiobookListParams, options?: RequestOptions): APIPromise<AudiobookListResponse> {
+  bulkRetrieve(
+    query: AudiobookBulkRetrieveParams,
+    options?: RequestOptions,
+  ): APIPromise<AudiobookBulkRetrieveResponse> {
     return this._client.get('/audiobooks', { query, ...options });
   }
 
@@ -32,132 +38,148 @@ export class Audiobooks extends APIResource {
    * only available within the US, UK, Canada, Ireland, New Zealand and Australia
    * markets.
    */
-  retrieveChapters(
+  listChapters(
     id: string,
-    query: AudiobookRetrieveChaptersParams | null | undefined = {},
+    query: AudiobookListChaptersParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<AudiobookRetrieveChaptersResponse> {
-    return this._client.get(path`/audiobooks/${id}/chapters`, { query, ...options });
+  ): PagePromise<SimplifiedChapterObjectsCursorURLPage, SimplifiedChapterObject> {
+    return this._client.getAPIList(path`/audiobooks/${id}/chapters`, CursorURLPage<SimplifiedChapterObject>, {
+      query,
+      ...options,
+    });
   }
 }
 
-export interface AudiobookRetrieveResponse {
+export type SimplifiedChapterObjectsCursorURLPage = CursorURLPage<SimplifiedChapterObject>;
+
+export interface SimplifiedChapterObject {
   /**
    * The [Spotify ID](/documentation/web-api/concepts/spotify-uris-ids) for the
-   * audiobook.
+   * chapter.
    */
   id: string;
 
   /**
-   * The author(s) for the audiobook.
+   * @deprecated A URL to a 30 second preview (MP3 format) of the chapter. `null` if
+   * not available.
    */
-  authors: Array<AudiobookRetrieveResponse.Author>;
+  audio_preview_url: string | null;
 
   /**
-   * A list of the countries in which the audiobook can be played, identified by
-   * their [ISO 3166-1 alpha-2](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
-   * code.
+   * The number of the chapter
    */
-  available_markets: Array<string>;
+  chapter_number: number;
 
   /**
-   * The chapters of the audiobook.
-   */
-  chapters: AudiobookRetrieveResponse.Chapters;
-
-  /**
-   * The copyright statements of the audiobook.
-   */
-  copyrights: Array<AudiobookRetrieveResponse.Copyright>;
-
-  /**
-   * A description of the audiobook. HTML tags are stripped away from this field, use
+   * A description of the chapter. HTML tags are stripped away from this field, use
    * `html_description` field in case HTML tags are needed.
    */
   description: string;
 
   /**
-   * Whether or not the audiobook has explicit content (true = yes it does; false =
-   * no it does not OR unknown).
+   * The chapter length in milliseconds.
+   */
+  duration_ms: number;
+
+  /**
+   * Whether or not the chapter has explicit content (true = yes it does; false = no
+   * it does not OR unknown).
    */
   explicit: boolean;
 
   /**
-   * External URLs for this audiobook.
+   * External URLs for this chapter.
    */
-  external_urls: AudiobookRetrieveResponse.ExternalURLs;
+  external_urls: Shared.ExternalURLObject;
 
   /**
-   * A link to the Web API endpoint providing full details of the audiobook.
+   * A link to the Web API endpoint providing full details of the chapter.
    */
   href: string;
 
   /**
-   * A description of the audiobook. This field may contain HTML tags.
+   * A description of the chapter. This field may contain HTML tags.
    */
   html_description: string;
 
   /**
-   * The cover art for the audiobook in various sizes, widest first.
+   * The cover art for the chapter in various sizes, widest first.
    */
-  images: Array<AudiobookRetrieveResponse.Image>;
+  images: Array<Shared.ImageObject>;
 
   /**
-   * A list of the languages used in the audiobook, identified by their
-   * [ISO 639](https://en.wikipedia.org/wiki/ISO_639) code.
+   * True if the chapter is playable in the given market. Otherwise false.
+   */
+  is_playable: boolean;
+
+  /**
+   * A list of the languages used in the chapter, identified by their
+   * [ISO 639-1](https://en.wikipedia.org/wiki/ISO_639) code.
    */
   languages: Array<string>;
 
   /**
-   * The media type of the audiobook.
-   */
-  media_type: string;
-
-  /**
-   * The name of the audiobook.
+   * The name of the chapter.
    */
   name: string;
 
   /**
-   * The narrator(s) for the audiobook.
+   * The date the chapter was first released, for example `"1981-12-15"`. Depending
+   * on the precision, it might be shown as `"1981"` or `"1981-12"`.
    */
-  narrators: Array<AudiobookRetrieveResponse.Narrator>;
+  release_date: string;
 
   /**
-   * The publisher of the audiobook.
+   * The precision with which `release_date` value is known.
    */
-  publisher: string;
-
-  /**
-   * The number of chapters in this audiobook.
-   */
-  total_chapters: number;
+  release_date_precision: 'year' | 'month' | 'day';
 
   /**
    * The object type.
    */
-  type: 'audiobook';
+  type: 'episode';
 
   /**
    * The [Spotify URI](/documentation/web-api/concepts/spotify-uris-ids) for the
-   * audiobook.
+   * chapter.
    */
   uri: string;
 
   /**
-   * The edition of the audiobook.
+   * A list of the countries in which the chapter can be played, identified by their
+   * [ISO 3166-1 alpha-2](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) code.
    */
-  edition?: string;
+  available_markets?: Array<string>;
+
+  /**
+   * The playlist's public/private status (if it should be added to the user's
+   * profile or not): `true` the playlist will be public, `false` the playlist will
+   * be private, `null` the playlist status is not relevant. For more about
+   * public/private status, see
+   * [Working with Playlists](/documentation/web-api/concepts/playlists)
+   */
+  published?: boolean;
+
+  /**
+   * Included in the response when a content restriction is applied.
+   */
+  restrictions?: Shared.ChapterRestrictionObject;
+
+  /**
+   * The user's most recent position in the chapter. Set if the supplied access token
+   * is a user token and has the scope 'user-read-playback-position'.
+   */
+  resume_point?: Shared.ResumePointObject;
+}
+
+export interface AudiobookRetrieveResponse extends Shared.AudiobookBase {
+  /**
+   * The chapters of the audiobook.
+   */
+  chapters: AudiobookRetrieveResponse.Chapters;
 }
 
 export namespace AudiobookRetrieveResponse {
-  export interface Author {
-    /**
-     * The name of the author.
-     */
-    name?: string;
-  }
-
   /**
    * The chapters of the audiobook.
    */
@@ -166,8 +188,6 @@ export namespace AudiobookRetrieveResponse {
      * A link to the Web API endpoint returning the full result of the request
      */
     href: string;
-
-    items: Array<Chapters.Item>;
 
     /**
      * The maximum number of items in the response (as set in the query or by default).
@@ -193,358 +213,33 @@ export namespace AudiobookRetrieveResponse {
      * The total number of items available to return.
      */
     total: number;
-  }
 
-  export namespace Chapters {
-    export interface Item {
-      /**
-       * The [Spotify ID](/documentation/web-api/concepts/spotify-uris-ids) for the
-       * chapter.
-       */
-      id: string;
-
-      /**
-       * @deprecated A URL to a 30 second preview (MP3 format) of the chapter. `null` if
-       * not available.
-       */
-      audio_preview_url: string | null;
-
-      /**
-       * The number of the chapter
-       */
-      chapter_number: number;
-
-      /**
-       * A description of the chapter. HTML tags are stripped away from this field, use
-       * `html_description` field in case HTML tags are needed.
-       */
-      description: string;
-
-      /**
-       * The chapter length in milliseconds.
-       */
-      duration_ms: number;
-
-      /**
-       * Whether or not the chapter has explicit content (true = yes it does; false = no
-       * it does not OR unknown).
-       */
-      explicit: boolean;
-
-      /**
-       * External URLs for this chapter.
-       */
-      external_urls: Item.ExternalURLs;
-
-      /**
-       * A link to the Web API endpoint providing full details of the chapter.
-       */
-      href: string;
-
-      /**
-       * A description of the chapter. This field may contain HTML tags.
-       */
-      html_description: string;
-
-      /**
-       * The cover art for the chapter in various sizes, widest first.
-       */
-      images: Array<Item.Image>;
-
-      /**
-       * True if the chapter is playable in the given market. Otherwise false.
-       */
-      is_playable: boolean;
-
-      /**
-       * A list of the languages used in the chapter, identified by their
-       * [ISO 639-1](https://en.wikipedia.org/wiki/ISO_639) code.
-       */
-      languages: Array<string>;
-
-      /**
-       * The name of the chapter.
-       */
-      name: string;
-
-      /**
-       * The date the chapter was first released, for example `"1981-12-15"`. Depending
-       * on the precision, it might be shown as `"1981"` or `"1981-12"`.
-       */
-      release_date: string;
-
-      /**
-       * The precision with which `release_date` value is known.
-       */
-      release_date_precision: 'year' | 'month' | 'day';
-
-      /**
-       * The object type.
-       */
-      type: 'episode';
-
-      /**
-       * The [Spotify URI](/documentation/web-api/concepts/spotify-uris-ids) for the
-       * chapter.
-       */
-      uri: string;
-
-      /**
-       * A list of the countries in which the chapter can be played, identified by their
-       * [ISO 3166-1 alpha-2](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) code.
-       */
-      available_markets?: Array<string>;
-
-      /**
-       * Included in the response when a content restriction is applied.
-       */
-      restrictions?: Item.Restrictions;
-
-      /**
-       * The user's most recent position in the chapter. Set if the supplied access token
-       * is a user token and has the scope 'user-read-playback-position'.
-       */
-      resume_point?: Item.ResumePoint;
-    }
-
-    export namespace Item {
-      /**
-       * External URLs for this chapter.
-       */
-      export interface ExternalURLs {
-        /**
-         * The [Spotify URL](/documentation/web-api/concepts/spotify-uris-ids) for the
-         * object.
-         */
-        spotify?: string;
-      }
-
-      export interface Image {
-        /**
-         * The image height in pixels.
-         */
-        height: number | null;
-
-        /**
-         * The source URL of the image.
-         */
-        url: string;
-
-        /**
-         * The image width in pixels.
-         */
-        width: number | null;
-      }
-
-      /**
-       * Included in the response when a content restriction is applied.
-       */
-      export interface Restrictions {
-        /**
-         * The reason for the restriction. Supported values:
-         *
-         * - `market` - The content item is not available in the given market.
-         * - `product` - The content item is not available for the user's subscription
-         *   type.
-         * - `explicit` - The content item is explicit and the user's account is set to not
-         *   play explicit content.
-         * - `payment_required` - Payment is required to play the content item.
-         *
-         * Additional reasons may be added in the future. **Note**: If you use this field,
-         * make sure that your application safely handles unknown values.
-         */
-        reason?: string;
-      }
-
-      /**
-       * The user's most recent position in the chapter. Set if the supplied access token
-       * is a user token and has the scope 'user-read-playback-position'.
-       */
-      export interface ResumePoint {
-        /**
-         * Whether or not the episode has been fully played by the user.
-         */
-        fully_played?: boolean;
-
-        /**
-         * The user's most recent position in the episode in milliseconds.
-         */
-        resume_position_ms?: number;
-      }
-    }
-  }
-
-  export interface Copyright {
-    /**
-     * The copyright text for this content.
-     */
-    text?: string;
+    items?: Array<AudiobooksAPI.SimplifiedChapterObject>;
 
     /**
-     * The type of copyright: `C` = the copyright, `P` = the sound recording
-     * (performance) copyright.
+     * The playlist's public/private status (if it should be added to the user's
+     * profile or not): `true` the playlist will be public, `false` the playlist will
+     * be private, `null` the playlist status is not relevant. For more about
+     * public/private status, see
+     * [Working with Playlists](/documentation/web-api/concepts/playlists)
      */
-    type?: string;
-  }
-
-  /**
-   * External URLs for this audiobook.
-   */
-  export interface ExternalURLs {
-    /**
-     * The [Spotify URL](/documentation/web-api/concepts/spotify-uris-ids) for the
-     * object.
-     */
-    spotify?: string;
-  }
-
-  export interface Image {
-    /**
-     * The image height in pixels.
-     */
-    height: number | null;
-
-    /**
-     * The source URL of the image.
-     */
-    url: string;
-
-    /**
-     * The image width in pixels.
-     */
-    width: number | null;
-  }
-
-  export interface Narrator {
-    /**
-     * The name of the Narrator.
-     */
-    name?: string;
+    published?: boolean;
   }
 }
 
-export interface AudiobookListResponse {
-  audiobooks: Array<AudiobookListResponse.Audiobook>;
+export interface AudiobookBulkRetrieveResponse {
+  audiobooks: Array<AudiobookBulkRetrieveResponse.Audiobook>;
 }
 
-export namespace AudiobookListResponse {
-  export interface Audiobook {
-    /**
-     * The [Spotify ID](/documentation/web-api/concepts/spotify-uris-ids) for the
-     * audiobook.
-     */
-    id: string;
-
-    /**
-     * The author(s) for the audiobook.
-     */
-    authors: Array<Audiobook.Author>;
-
-    /**
-     * A list of the countries in which the audiobook can be played, identified by
-     * their [ISO 3166-1 alpha-2](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
-     * code.
-     */
-    available_markets: Array<string>;
-
+export namespace AudiobookBulkRetrieveResponse {
+  export interface Audiobook extends Shared.AudiobookBase {
     /**
      * The chapters of the audiobook.
      */
     chapters: Audiobook.Chapters;
-
-    /**
-     * The copyright statements of the audiobook.
-     */
-    copyrights: Array<Audiobook.Copyright>;
-
-    /**
-     * A description of the audiobook. HTML tags are stripped away from this field, use
-     * `html_description` field in case HTML tags are needed.
-     */
-    description: string;
-
-    /**
-     * Whether or not the audiobook has explicit content (true = yes it does; false =
-     * no it does not OR unknown).
-     */
-    explicit: boolean;
-
-    /**
-     * External URLs for this audiobook.
-     */
-    external_urls: Audiobook.ExternalURLs;
-
-    /**
-     * A link to the Web API endpoint providing full details of the audiobook.
-     */
-    href: string;
-
-    /**
-     * A description of the audiobook. This field may contain HTML tags.
-     */
-    html_description: string;
-
-    /**
-     * The cover art for the audiobook in various sizes, widest first.
-     */
-    images: Array<Audiobook.Image>;
-
-    /**
-     * A list of the languages used in the audiobook, identified by their
-     * [ISO 639](https://en.wikipedia.org/wiki/ISO_639) code.
-     */
-    languages: Array<string>;
-
-    /**
-     * The media type of the audiobook.
-     */
-    media_type: string;
-
-    /**
-     * The name of the audiobook.
-     */
-    name: string;
-
-    /**
-     * The narrator(s) for the audiobook.
-     */
-    narrators: Array<Audiobook.Narrator>;
-
-    /**
-     * The publisher of the audiobook.
-     */
-    publisher: string;
-
-    /**
-     * The number of chapters in this audiobook.
-     */
-    total_chapters: number;
-
-    /**
-     * The object type.
-     */
-    type: 'audiobook';
-
-    /**
-     * The [Spotify URI](/documentation/web-api/concepts/spotify-uris-ids) for the
-     * audiobook.
-     */
-    uri: string;
-
-    /**
-     * The edition of the audiobook.
-     */
-    edition?: string;
   }
 
   export namespace Audiobook {
-    export interface Author {
-      /**
-       * The name of the author.
-       */
-      name?: string;
-    }
-
     /**
      * The chapters of the audiobook.
      */
@@ -553,8 +248,6 @@ export namespace AudiobookListResponse {
        * A link to the Web API endpoint returning the full result of the request
        */
       href: string;
-
-      items: Array<Chapters.Item>;
 
       /**
        * The maximum number of items in the response (as set in the query or by default).
@@ -580,446 +273,17 @@ export namespace AudiobookListResponse {
        * The total number of items available to return.
        */
       total: number;
-    }
 
-    export namespace Chapters {
-      export interface Item {
-        /**
-         * The [Spotify ID](/documentation/web-api/concepts/spotify-uris-ids) for the
-         * chapter.
-         */
-        id: string;
-
-        /**
-         * @deprecated A URL to a 30 second preview (MP3 format) of the chapter. `null` if
-         * not available.
-         */
-        audio_preview_url: string | null;
-
-        /**
-         * The number of the chapter
-         */
-        chapter_number: number;
-
-        /**
-         * A description of the chapter. HTML tags are stripped away from this field, use
-         * `html_description` field in case HTML tags are needed.
-         */
-        description: string;
-
-        /**
-         * The chapter length in milliseconds.
-         */
-        duration_ms: number;
-
-        /**
-         * Whether or not the chapter has explicit content (true = yes it does; false = no
-         * it does not OR unknown).
-         */
-        explicit: boolean;
-
-        /**
-         * External URLs for this chapter.
-         */
-        external_urls: Item.ExternalURLs;
-
-        /**
-         * A link to the Web API endpoint providing full details of the chapter.
-         */
-        href: string;
-
-        /**
-         * A description of the chapter. This field may contain HTML tags.
-         */
-        html_description: string;
-
-        /**
-         * The cover art for the chapter in various sizes, widest first.
-         */
-        images: Array<Item.Image>;
-
-        /**
-         * True if the chapter is playable in the given market. Otherwise false.
-         */
-        is_playable: boolean;
-
-        /**
-         * A list of the languages used in the chapter, identified by their
-         * [ISO 639-1](https://en.wikipedia.org/wiki/ISO_639) code.
-         */
-        languages: Array<string>;
-
-        /**
-         * The name of the chapter.
-         */
-        name: string;
-
-        /**
-         * The date the chapter was first released, for example `"1981-12-15"`. Depending
-         * on the precision, it might be shown as `"1981"` or `"1981-12"`.
-         */
-        release_date: string;
-
-        /**
-         * The precision with which `release_date` value is known.
-         */
-        release_date_precision: 'year' | 'month' | 'day';
-
-        /**
-         * The object type.
-         */
-        type: 'episode';
-
-        /**
-         * The [Spotify URI](/documentation/web-api/concepts/spotify-uris-ids) for the
-         * chapter.
-         */
-        uri: string;
-
-        /**
-         * A list of the countries in which the chapter can be played, identified by their
-         * [ISO 3166-1 alpha-2](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) code.
-         */
-        available_markets?: Array<string>;
-
-        /**
-         * Included in the response when a content restriction is applied.
-         */
-        restrictions?: Item.Restrictions;
-
-        /**
-         * The user's most recent position in the chapter. Set if the supplied access token
-         * is a user token and has the scope 'user-read-playback-position'.
-         */
-        resume_point?: Item.ResumePoint;
-      }
-
-      export namespace Item {
-        /**
-         * External URLs for this chapter.
-         */
-        export interface ExternalURLs {
-          /**
-           * The [Spotify URL](/documentation/web-api/concepts/spotify-uris-ids) for the
-           * object.
-           */
-          spotify?: string;
-        }
-
-        export interface Image {
-          /**
-           * The image height in pixels.
-           */
-          height: number | null;
-
-          /**
-           * The source URL of the image.
-           */
-          url: string;
-
-          /**
-           * The image width in pixels.
-           */
-          width: number | null;
-        }
-
-        /**
-         * Included in the response when a content restriction is applied.
-         */
-        export interface Restrictions {
-          /**
-           * The reason for the restriction. Supported values:
-           *
-           * - `market` - The content item is not available in the given market.
-           * - `product` - The content item is not available for the user's subscription
-           *   type.
-           * - `explicit` - The content item is explicit and the user's account is set to not
-           *   play explicit content.
-           * - `payment_required` - Payment is required to play the content item.
-           *
-           * Additional reasons may be added in the future. **Note**: If you use this field,
-           * make sure that your application safely handles unknown values.
-           */
-          reason?: string;
-        }
-
-        /**
-         * The user's most recent position in the chapter. Set if the supplied access token
-         * is a user token and has the scope 'user-read-playback-position'.
-         */
-        export interface ResumePoint {
-          /**
-           * Whether or not the episode has been fully played by the user.
-           */
-          fully_played?: boolean;
-
-          /**
-           * The user's most recent position in the episode in milliseconds.
-           */
-          resume_position_ms?: number;
-        }
-      }
-    }
-
-    export interface Copyright {
-      /**
-       * The copyright text for this content.
-       */
-      text?: string;
+      items?: Array<AudiobooksAPI.SimplifiedChapterObject>;
 
       /**
-       * The type of copyright: `C` = the copyright, `P` = the sound recording
-       * (performance) copyright.
+       * The playlist's public/private status (if it should be added to the user's
+       * profile or not): `true` the playlist will be public, `false` the playlist will
+       * be private, `null` the playlist status is not relevant. For more about
+       * public/private status, see
+       * [Working with Playlists](/documentation/web-api/concepts/playlists)
        */
-      type?: string;
-    }
-
-    /**
-     * External URLs for this audiobook.
-     */
-    export interface ExternalURLs {
-      /**
-       * The [Spotify URL](/documentation/web-api/concepts/spotify-uris-ids) for the
-       * object.
-       */
-      spotify?: string;
-    }
-
-    export interface Image {
-      /**
-       * The image height in pixels.
-       */
-      height: number | null;
-
-      /**
-       * The source URL of the image.
-       */
-      url: string;
-
-      /**
-       * The image width in pixels.
-       */
-      width: number | null;
-    }
-
-    export interface Narrator {
-      /**
-       * The name of the Narrator.
-       */
-      name?: string;
-    }
-  }
-}
-
-export interface AudiobookRetrieveChaptersResponse {
-  /**
-   * A link to the Web API endpoint returning the full result of the request
-   */
-  href: string;
-
-  items: Array<AudiobookRetrieveChaptersResponse.Item>;
-
-  /**
-   * The maximum number of items in the response (as set in the query or by default).
-   */
-  limit: number;
-
-  /**
-   * URL to the next page of items. ( `null` if none)
-   */
-  next: string | null;
-
-  /**
-   * The offset of the items returned (as set in the query or by default)
-   */
-  offset: number;
-
-  /**
-   * URL to the previous page of items. ( `null` if none)
-   */
-  previous: string | null;
-
-  /**
-   * The total number of items available to return.
-   */
-  total: number;
-}
-
-export namespace AudiobookRetrieveChaptersResponse {
-  export interface Item {
-    /**
-     * The [Spotify ID](/documentation/web-api/concepts/spotify-uris-ids) for the
-     * chapter.
-     */
-    id: string;
-
-    /**
-     * @deprecated A URL to a 30 second preview (MP3 format) of the chapter. `null` if
-     * not available.
-     */
-    audio_preview_url: string | null;
-
-    /**
-     * The number of the chapter
-     */
-    chapter_number: number;
-
-    /**
-     * A description of the chapter. HTML tags are stripped away from this field, use
-     * `html_description` field in case HTML tags are needed.
-     */
-    description: string;
-
-    /**
-     * The chapter length in milliseconds.
-     */
-    duration_ms: number;
-
-    /**
-     * Whether or not the chapter has explicit content (true = yes it does; false = no
-     * it does not OR unknown).
-     */
-    explicit: boolean;
-
-    /**
-     * External URLs for this chapter.
-     */
-    external_urls: Item.ExternalURLs;
-
-    /**
-     * A link to the Web API endpoint providing full details of the chapter.
-     */
-    href: string;
-
-    /**
-     * A description of the chapter. This field may contain HTML tags.
-     */
-    html_description: string;
-
-    /**
-     * The cover art for the chapter in various sizes, widest first.
-     */
-    images: Array<Item.Image>;
-
-    /**
-     * True if the chapter is playable in the given market. Otherwise false.
-     */
-    is_playable: boolean;
-
-    /**
-     * A list of the languages used in the chapter, identified by their
-     * [ISO 639-1](https://en.wikipedia.org/wiki/ISO_639) code.
-     */
-    languages: Array<string>;
-
-    /**
-     * The name of the chapter.
-     */
-    name: string;
-
-    /**
-     * The date the chapter was first released, for example `"1981-12-15"`. Depending
-     * on the precision, it might be shown as `"1981"` or `"1981-12"`.
-     */
-    release_date: string;
-
-    /**
-     * The precision with which `release_date` value is known.
-     */
-    release_date_precision: 'year' | 'month' | 'day';
-
-    /**
-     * The object type.
-     */
-    type: 'episode';
-
-    /**
-     * The [Spotify URI](/documentation/web-api/concepts/spotify-uris-ids) for the
-     * chapter.
-     */
-    uri: string;
-
-    /**
-     * A list of the countries in which the chapter can be played, identified by their
-     * [ISO 3166-1 alpha-2](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) code.
-     */
-    available_markets?: Array<string>;
-
-    /**
-     * Included in the response when a content restriction is applied.
-     */
-    restrictions?: Item.Restrictions;
-
-    /**
-     * The user's most recent position in the chapter. Set if the supplied access token
-     * is a user token and has the scope 'user-read-playback-position'.
-     */
-    resume_point?: Item.ResumePoint;
-  }
-
-  export namespace Item {
-    /**
-     * External URLs for this chapter.
-     */
-    export interface ExternalURLs {
-      /**
-       * The [Spotify URL](/documentation/web-api/concepts/spotify-uris-ids) for the
-       * object.
-       */
-      spotify?: string;
-    }
-
-    export interface Image {
-      /**
-       * The image height in pixels.
-       */
-      height: number | null;
-
-      /**
-       * The source URL of the image.
-       */
-      url: string;
-
-      /**
-       * The image width in pixels.
-       */
-      width: number | null;
-    }
-
-    /**
-     * Included in the response when a content restriction is applied.
-     */
-    export interface Restrictions {
-      /**
-       * The reason for the restriction. Supported values:
-       *
-       * - `market` - The content item is not available in the given market.
-       * - `product` - The content item is not available for the user's subscription
-       *   type.
-       * - `explicit` - The content item is explicit and the user's account is set to not
-       *   play explicit content.
-       * - `payment_required` - Payment is required to play the content item.
-       *
-       * Additional reasons may be added in the future. **Note**: If you use this field,
-       * make sure that your application safely handles unknown values.
-       */
-      reason?: string;
-    }
-
-    /**
-     * The user's most recent position in the chapter. Set if the supplied access token
-     * is a user token and has the scope 'user-read-playback-position'.
-     */
-    export interface ResumePoint {
-      /**
-       * Whether or not the episode has been fully played by the user.
-       */
-      fully_played?: boolean;
-
-      /**
-       * The user's most recent position in the episode in milliseconds.
-       */
-      resume_position_ms?: number;
+      published?: boolean;
     }
   }
 }
@@ -1039,7 +303,7 @@ export interface AudiobookRetrieveParams {
   market?: string;
 }
 
-export interface AudiobookListParams {
+export interface AudiobookBulkRetrieveParams {
   /**
    * A comma-separated list of the
    * [Spotify IDs](/documentation/web-api/concepts/spotify-uris-ids). For example:
@@ -1061,7 +325,7 @@ export interface AudiobookListParams {
   market?: string;
 }
 
-export interface AudiobookRetrieveChaptersParams {
+export interface AudiobookListChaptersParams {
   /**
    * The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50.
    */
@@ -1089,11 +353,12 @@ export interface AudiobookRetrieveChaptersParams {
 
 export declare namespace Audiobooks {
   export {
+    type SimplifiedChapterObject as SimplifiedChapterObject,
     type AudiobookRetrieveResponse as AudiobookRetrieveResponse,
-    type AudiobookListResponse as AudiobookListResponse,
-    type AudiobookRetrieveChaptersResponse as AudiobookRetrieveChaptersResponse,
+    type AudiobookBulkRetrieveResponse as AudiobookBulkRetrieveResponse,
+    type SimplifiedChapterObjectsCursorURLPage as SimplifiedChapterObjectsCursorURLPage,
     type AudiobookRetrieveParams as AudiobookRetrieveParams,
-    type AudiobookListParams as AudiobookListParams,
-    type AudiobookRetrieveChaptersParams as AudiobookRetrieveChaptersParams,
+    type AudiobookBulkRetrieveParams as AudiobookBulkRetrieveParams,
+    type AudiobookListChaptersParams as AudiobookListChaptersParams,
   };
 }

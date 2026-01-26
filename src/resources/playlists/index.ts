@@ -6,7 +6,7 @@ export {
   type FollowerCheckParams,
   type FollowerFollowParams,
 } from './followers';
-export { Images, type ImageRetrieveResponse, type ImageUpdateParams } from './images';
+export { Images, type ImageListResponse } from './images';
 export {
   Playlists,
   type PlaylistRetrieveResponse,
@@ -15,12 +15,11 @@ export {
 } from './playlists';
 export {
   Tracks,
-  type TrackRetrieveResponse,
   type TrackUpdateResponse,
   type TrackAddResponse,
   type TrackRemoveResponse,
-  type TrackRetrieveParams,
   type TrackUpdateParams,
+  type TrackListParams,
   type TrackAddParams,
   type TrackRemoveParams,
 } from './tracks';

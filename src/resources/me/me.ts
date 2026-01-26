@@ -1,12 +1,14 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
+import * as Shared from '../shared';
 import * as AlbumsAPI from './albums';
 import {
   AlbumCheckParams,
   AlbumCheckResponse,
   AlbumListParams,
   AlbumListResponse,
+  AlbumListResponsesCursorURLPage,
   AlbumRemoveParams,
   AlbumSaveParams,
   Albums,
@@ -17,6 +19,7 @@ import {
   AudiobookCheckResponse,
   AudiobookListParams,
   AudiobookListResponse,
+  AudiobookListResponsesCursorURLPage,
   AudiobookRemoveParams,
   AudiobookSaveParams,
   Audiobooks,
@@ -27,6 +30,7 @@ import {
   EpisodeCheckResponse,
   EpisodeListParams,
   EpisodeListResponse,
+  EpisodeListResponsesCursorURLPage,
   EpisodeRemoveParams,
   EpisodeSaveParams,
   Episodes,
@@ -34,56 +38,55 @@ import {
 import * as FollowingAPI from './following';
 import {
   Following,
+  FollowingBulkRetrieveParams,
+  FollowingBulkRetrieveResponse,
   FollowingCheckParams,
   FollowingCheckResponse,
   FollowingFollowParams,
-  FollowingListParams,
-  FollowingListResponse,
   FollowingUnfollowParams,
 } from './following';
 import * as PlaylistsAPI from './playlists';
-import { PlaylistRetrieveParams, PlaylistRetrieveResponse, Playlists } from './playlists';
+import { PlaylistListParams, Playlists } from './playlists';
 import * as ShowsAPI from './shows';
 import {
   ShowCheckParams,
   ShowCheckResponse,
   ShowListParams,
   ShowListResponse,
+  ShowListResponsesCursorURLPage,
   ShowRemoveParams,
   ShowSaveParams,
   Shows,
 } from './shows';
 import * as TopAPI from './top';
-import {
-  Top,
-  TopGetArtistsParams,
-  TopGetArtistsResponse,
-  TopGetTracksParams,
-  TopGetTracksResponse,
-} from './top';
+import { Top, TopListTopArtistsParams, TopListTopTracksParams } from './top';
 import * as TracksAPI from './tracks';
 import {
   TrackCheckParams,
   TrackCheckResponse,
   TrackListParams,
   TrackListResponse,
+  TrackListResponsesCursorURLPage,
   TrackRemoveParams,
   TrackSaveParams,
   Tracks,
 } from './tracks';
 import * as PlayerAPI from './player/player';
 import {
+  ContextObject,
+  DeviceObject,
   Player,
   PlayerGetCurrentlyPlayingParams,
   PlayerGetCurrentlyPlayingResponse,
   PlayerGetDevicesResponse,
-  PlayerGetRecentlyPlayedParams,
-  PlayerGetRecentlyPlayedResponse,
   PlayerGetStateParams,
   PlayerGetStateResponse,
+  PlayerListRecentlyPlayedParams,
+  PlayerListRecentlyPlayedResponse,
+  PlayerListRecentlyPlayedResponsesCursorURLPage,
   PlayerPausePlaybackParams,
-  PlayerSeekParams,
-  PlayerSetRepeatParams,
+  PlayerSeekToPositionParams,
+  PlayerSetRepeatModeParams,
   PlayerSetVolumeParams,
   PlayerSkipNextParams,
   PlayerSkipPreviousParams,
@@ -97,13 +100,13 @@ import { RequestOptions } from '../../internal/request-options';
 export class Me extends APIResource {
   audiobooks: AudiobooksAPI.Audiobooks = new AudiobooksAPI.Audiobooks(this._client);
   playlists: PlaylistsAPI.Playlists = new PlaylistsAPI.Playlists(this._client);
+  top: TopAPI.Top = new TopAPI.Top(this._client);
   albums: AlbumsAPI.Albums = new AlbumsAPI.Albums(this._client);
   tracks: TracksAPI.Tracks = new TracksAPI.Tracks(this._client);
   episodes: EpisodesAPI.Episodes = new EpisodesAPI.Episodes(this._client);
   shows: ShowsAPI.Shows = new ShowsAPI.Shows(this._client);
   following: FollowingAPI.Following = new FollowingAPI.Following(this._client);
   player: PlayerAPI.Player = new PlayerAPI.Player(this._client);
-  top: TopAPI.Top = new TopAPI.Top(this._client);
 
   /**
    * Get detailed profile information about the current user (including the current
@@ -161,12 +164,12 @@ export interface MeRetrieveResponse {
   /**
    * Known external URLs for this user.
    */
-  external_urls?: MeRetrieveResponse.ExternalURLs;
+  external_urls?: Shared.ExternalURLObject;
 
   /**
    * Information about the followers of the user.
    */
-  followers?: MeRetrieveResponse.Followers;
+  followers?: Shared.FollowersObject;
 
   /**
    * A link to the Web API endpoint for this user.
@@ -176,7 +179,7 @@ export interface MeRetrieveResponse {
   /**
    * The user's profile image.
    */
-  images?: Array<MeRetrieveResponse.Image>;
+  images?: Array<Shared.ImageObject>;
 
   /**
    * The user's Spotify subscription level: "premium", "free", etc. (The subscription
@@ -186,6 +189,15 @@ export interface MeRetrieveResponse {
    * scope._
    */
   product?: string;
+
+  /**
+   * The playlist's public/private status (if it should be added to the user's
+   * profile or not): `true` the playlist will be public, `false` the playlist will
+   * be private, `null` the playlist status is not relevant. For more about
+   * public/private status, see
+   * [Working with Playlists](/documentation/web-api/concepts/playlists)
+   */
+  published?: boolean;
 
   /**
    * The object type: "user"
@@ -217,62 +229,27 @@ export namespace MeRetrieveResponse {
      * changed by the user.
      */
     filter_locked?: boolean;
-  }
-
-  /**
-   * Known external URLs for this user.
-   */
-  export interface ExternalURLs {
-    /**
-     * The [Spotify URL](/documentation/web-api/concepts/spotify-uris-ids) for the
-     * object.
-     */
-    spotify?: string;
-  }
-
-  /**
-   * Information about the followers of the user.
-   */
-  export interface Followers {
-    /**
-     * This will always be set to null, as the Web API does not support it at the
-     * moment.
-     */
-    href?: string | null;
 
     /**
-     * The total number of followers.
+     * The playlist's public/private status (if it should be added to the user's
+     * profile or not): `true` the playlist will be public, `false` the playlist will
+     * be private, `null` the playlist status is not relevant. For more about
+     * public/private status, see
+     * [Working with Playlists](/documentation/web-api/concepts/playlists)
      */
-    total?: number;
-  }
-
-  export interface Image {
-    /**
-     * The image height in pixels.
-     */
-    height: number | null;
-
-    /**
-     * The source URL of the image.
-     */
-    url: string;
-
-    /**
-     * The image width in pixels.
-     */
-    width: number | null;
+    published?: boolean;
   }
 }
 
 Me.Audiobooks = Audiobooks;
 Me.Playlists = Playlists;
+Me.Top = Top;
 Me.Albums = Albums;
 Me.Tracks = Tracks;
 Me.Episodes = Episodes;
 Me.Shows = Shows;
 Me.Following = Following;
 Me.Player = Player;
-Me.Top = Top;
 
 export declare namespace Me {
   export { type MeRetrieveResponse as MeRetrieveResponse };
@@ -281,22 +258,26 @@ export declare namespace Me {
     Audiobooks as Audiobooks,
     type AudiobookListResponse as AudiobookListResponse,
     type AudiobookCheckResponse as AudiobookCheckResponse,
+    type AudiobookListResponsesCursorURLPage as AudiobookListResponsesCursorURLPage,
     type AudiobookListParams as AudiobookListParams,
     type AudiobookCheckParams as AudiobookCheckParams,
     type AudiobookRemoveParams as AudiobookRemoveParams,
     type AudiobookSaveParams as AudiobookSaveParams,
   };
 
+  export { Playlists as Playlists, type PlaylistListParams as PlaylistListParams };
+
   export {
-    Playlists as Playlists,
-    type PlaylistRetrieveResponse as PlaylistRetrieveResponse,
-    type PlaylistRetrieveParams as PlaylistRetrieveParams,
+    Top as Top,
+    type TopListTopArtistsParams as TopListTopArtistsParams,
+    type TopListTopTracksParams as TopListTopTracksParams,
   };
 
   export {
     Albums as Albums,
     type AlbumListResponse as AlbumListResponse,
     type AlbumCheckResponse as AlbumCheckResponse,
+    type AlbumListResponsesCursorURLPage as AlbumListResponsesCursorURLPage,
     type AlbumListParams as AlbumListParams,
     type AlbumCheckParams as AlbumCheckParams,
     type AlbumRemoveParams as AlbumRemoveParams,
@@ -307,6 +288,7 @@ export declare namespace Me {
     Tracks as Tracks,
     type TrackListResponse as TrackListResponse,
     type TrackCheckResponse as TrackCheckResponse,
+    type TrackListResponsesCursorURLPage as TrackListResponsesCursorURLPage,
     type TrackListParams as TrackListParams,
     type TrackCheckParams as TrackCheckParams,
     type TrackRemoveParams as TrackRemoveParams,
@@ -317,6 +299,7 @@ export declare namespace Me {
     Episodes as Episodes,
     type EpisodeListResponse as EpisodeListResponse,
     type EpisodeCheckResponse as EpisodeCheckResponse,
+    type EpisodeListResponsesCursorURLPage as EpisodeListResponsesCursorURLPage,
     type EpisodeListParams as EpisodeListParams,
     type EpisodeCheckParams as EpisodeCheckParams,
     type EpisodeRemoveParams as EpisodeRemoveParams,
@@ -327,6 +310,7 @@ export declare namespace Me {
     Shows as Shows,
     type ShowListResponse as ShowListResponse,
     type ShowCheckResponse as ShowCheckResponse,
+    type ShowListResponsesCursorURLPage as ShowListResponsesCursorURLPage,
     type ShowListParams as ShowListParams,
     type ShowCheckParams as ShowCheckParams,
     type ShowRemoveParams as ShowRemoveParams,
@@ -335,9 +319,9 @@ export declare namespace Me {
 
   export {
     Following as Following,
-    type FollowingListResponse as FollowingListResponse,
+    type FollowingBulkRetrieveResponse as FollowingBulkRetrieveResponse,
     type FollowingCheckResponse as FollowingCheckResponse,
-    type FollowingListParams as FollowingListParams,
+    type FollowingBulkRetrieveParams as FollowingBulkRetrieveParams,
     type FollowingCheckParams as FollowingCheckParams,
     type FollowingFollowParams as FollowingFollowParams,
     type FollowingUnfollowParams as FollowingUnfollowParams,
@@ -345,29 +329,24 @@ export declare namespace Me {
 
   export {
     Player as Player,
+    type ContextObject as ContextObject,
+    type DeviceObject as DeviceObject,
     type PlayerGetCurrentlyPlayingResponse as PlayerGetCurrentlyPlayingResponse,
     type PlayerGetDevicesResponse as PlayerGetDevicesResponse,
-    type PlayerGetRecentlyPlayedResponse as PlayerGetRecentlyPlayedResponse,
     type PlayerGetStateResponse as PlayerGetStateResponse,
+    type PlayerListRecentlyPlayedResponse as PlayerListRecentlyPlayedResponse,
+    type PlayerListRecentlyPlayedResponsesCursorURLPage as PlayerListRecentlyPlayedResponsesCursorURLPage,
     type PlayerGetCurrentlyPlayingParams as PlayerGetCurrentlyPlayingParams,
-    type PlayerGetRecentlyPlayedParams as PlayerGetRecentlyPlayedParams,
     type PlayerGetStateParams as PlayerGetStateParams,
+    type PlayerListRecentlyPlayedParams as PlayerListRecentlyPlayedParams,
     type PlayerPausePlaybackParams as PlayerPausePlaybackParams,
-    type PlayerSeekParams as PlayerSeekParams,
-    type PlayerSetRepeatParams as PlayerSetRepeatParams,
+    type PlayerSeekToPositionParams as PlayerSeekToPositionParams,
+    type PlayerSetRepeatModeParams as PlayerSetRepeatModeParams,
     type PlayerSetVolumeParams as PlayerSetVolumeParams,
     type PlayerSkipNextParams as PlayerSkipNextParams,
     type PlayerSkipPreviousParams as PlayerSkipPreviousParams,
     type PlayerStartPlaybackParams as PlayerStartPlaybackParams,
     type PlayerToggleShuffleParams as PlayerToggleShuffleParams,
     type PlayerTransferParams as PlayerTransferParams,
-  };
-
-  export {
-    Top as Top,
-    type TopGetArtistsResponse as TopGetArtistsResponse,
-    type TopGetTracksResponse as TopGetTracksResponse,
-    type TopGetArtistsParams as TopGetArtistsParams,
-    type TopGetTracksParams as TopGetTracksParams,
   };
 }

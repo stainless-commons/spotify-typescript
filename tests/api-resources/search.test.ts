@@ -1,16 +1,16 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import Spotify from 'spotify';
+import Spotify from 'spotify-ts';
 
 const client = new Spotify({
-  apiKey: 'My API Key',
+  accessToken: 'My Access Token',
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
 describe('resource search', () => {
   // Prism tests are disabled
-  test.skip('retrieve: only required params', async () => {
-    const responsePromise = client.search.retrieve({
+  test.skip('query: only required params', async () => {
+    const responsePromise = client.search.query({
       q: 'remaster%20track:Doxy%20artist:Miles%20Davis',
       type: ['album'],
     });
@@ -24,8 +24,8 @@ describe('resource search', () => {
   });
 
   // Prism tests are disabled
-  test.skip('retrieve: required and optional params', async () => {
-    const response = await client.search.retrieve({
+  test.skip('query: required and optional params', async () => {
+    const response = await client.search.query({
       q: 'remaster%20track:Doxy%20artist:Miles%20Davis',
       type: ['album'],
       include_external: 'audio',

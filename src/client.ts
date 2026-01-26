@@ -14,81 +14,80 @@ import * as Opts from './internal/request-options';
 import * as qs from './internal/qs';
 import { VERSION } from './version';
 import * as Errors from './core/error';
+import * as Pagination from './core/pagination';
+import { AbstractPage, CursorURLPageResponse } from './core/pagination';
 import * as Uploads from './core/uploads';
 import * as API from './resources/index';
 import { APIPromise } from './core/api-promise';
 import {
-  AlbumGetTracksParams,
-  AlbumGetTracksResponse,
-  AlbumListParams,
-  AlbumListResponse,
+  AlbumBulkRetrieveParams,
+  AlbumBulkRetrieveResponse,
+  AlbumListTracksParams,
   AlbumRetrieveParams,
   AlbumRetrieveResponse,
   Albums,
 } from './resources/albums';
 import {
+  ArtistBulkRetrieveParams,
+  ArtistBulkRetrieveResponse,
   ArtistListAlbumsParams,
   ArtistListAlbumsResponse,
-  ArtistListParams,
+  ArtistListAlbumsResponsesCursorURLPage,
   ArtistListRelatedArtistsResponse,
-  ArtistListResponse,
-  ArtistListTopTracksParams,
-  ArtistListTopTracksResponse,
-  ArtistRetrieveResponse,
+  ArtistTopTracksParams,
+  ArtistTopTracksResponse,
   Artists,
 } from './resources/artists';
-import { AudioAnalysis, AudioAnalysisRetrieveResponse } from './resources/audio-analysis';
+import { AudioAnalysis, AudioAnalysisRetrieveResponse, TimeIntervalObject } from './resources/audio-analysis';
 import {
-  AudioFeatureListParams,
-  AudioFeatureListResponse,
+  AudioFeatureBulkRetrieveParams,
+  AudioFeatureBulkRetrieveResponse,
   AudioFeatureRetrieveResponse,
   AudioFeatures,
 } from './resources/audio-features';
 import {
-  AudiobookListParams,
-  AudiobookListResponse,
-  AudiobookRetrieveChaptersParams,
-  AudiobookRetrieveChaptersResponse,
+  AudiobookBulkRetrieveParams,
+  AudiobookBulkRetrieveResponse,
+  AudiobookListChaptersParams,
   AudiobookRetrieveParams,
   AudiobookRetrieveResponse,
   Audiobooks,
+  SimplifiedChapterObject,
+  SimplifiedChapterObjectsCursorURLPage,
 } from './resources/audiobooks';
 import {
-  ChapterListParams,
-  ChapterListResponse,
+  ChapterBulkRetrieveParams,
+  ChapterBulkRetrieveResponse,
   ChapterRetrieveParams,
   ChapterRetrieveResponse,
   Chapters,
 } from './resources/chapters';
 import {
-  EpisodeListParams,
-  EpisodeListResponse,
+  EpisodeBulkRetrieveParams,
+  EpisodeBulkRetrieveResponse,
   EpisodeRetrieveParams,
-  EpisodeRetrieveResponse,
   Episodes,
 } from './resources/episodes';
 import { MarketListResponse, Markets } from './resources/markets';
 import {
+  RecommendationGetParams,
+  RecommendationGetResponse,
   RecommendationListAvailableGenreSeedsResponse,
-  RecommendationListParams,
-  RecommendationListResponse,
   Recommendations,
 } from './resources/recommendations';
-import { Search, SearchRetrieveParams, SearchRetrieveResponse } from './resources/search';
+import { Search, SearchQueryParams, SearchQueryResponse } from './resources/search';
 import {
-  ShowGetEpisodesParams,
-  ShowGetEpisodesResponse,
-  ShowListParams,
-  ShowListResponse,
+  ShowBulkRetrieveParams,
+  ShowBulkRetrieveResponse,
+  ShowListEpisodesParams,
   ShowRetrieveParams,
   ShowRetrieveResponse,
   Shows,
 } from './resources/shows';
 import {
-  TrackListParams,
-  TrackListResponse,
+  TrackBulkRetrieveParams,
+  TrackBulkRetrieveResponse,
   TrackRetrieveParams,
-  TrackRetrieveResponse,
   Tracks,
 } from './resources/tracks';
 import {
@@ -121,9 +120,9 @@ import { isEmptyObj } from './internal/utils/values';
 
 export interface ClientOptions {
   /**
-   * Defaults to process.env['SPOTIFY_API_KEY'].
+   * Defaults to process.env['SPOTIFY_ACCESS_TOKEN'].
    */
-  apiKey?: string | null | undefined;
+  accessToken?: string | undefined;
 
   /**
    * Override the default base URL for the API, e.g., "https://api.example.com/v2/"
@@ -198,7 +197,7 @@ export interface ClientOptions {
  * API Client for interfacing with the Spotify API.
  */
 export class Spotify {
-  apiKey: string | null;
+  accessToken: string;
 
   baseURL: string;
   maxRetries: number;
@@ -215,7 +214,7 @@ export class Spotify {
   /**
    * API Client for interfacing with the Spotify API.
    *
-   * @param {string | null | undefined} [opts.apiKey=process.env['SPOTIFY_API_KEY'] ?? null]
+   * @param {string | undefined} [opts.accessToken=process.env['SPOTIFY_ACCESS_TOKEN'] ?? undefined]
    * @param {string} [opts.baseURL=process.env['SPOTIFY_BASE_URL'] ?? https://api.spotify.com/v1] - Override the default base URL for the API.
    * @param {number} [opts.timeout=1 minute] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
    * @param {MergedRequestInit} [opts.fetchOptions] - Additional `RequestInit` options to be passed to `fetch` calls.
@@ -226,11 +225,17 @@ export class Spotify {
    */
   constructor({
     baseURL = readEnv('SPOTIFY_BASE_URL'),
-    apiKey = readEnv('SPOTIFY_API_KEY') ?? null,
+    accessToken = readEnv('SPOTIFY_ACCESS_TOKEN'),
     ...opts
   }: ClientOptions = {}) {
+    if (accessToken === undefined) {
+      throw new Errors.SpotifyError(
+        "The SPOTIFY_ACCESS_TOKEN environment variable is missing or empty; either provide it, or instantiate the Spotify client with an accessToken option, like new Spotify({ accessToken: 'My Access Token' }).",
+      );
+    }
+
     const options: ClientOptions = {
-      apiKey,
+      accessToken,
       ...opts,
       baseURL: baseURL || `https://api.spotify.com/v1`,
     };
@@ -252,7 +257,7 @@ export class Spotify {
 
     this._options = options;
 
-    this.apiKey = apiKey;
+    this.accessToken = accessToken;
   }
 
   /**
@@ -268,7 +273,7 @@ export class Spotify {
       logLevel: this.logLevel,
       fetch: this.fetch,
       fetchOptions: this.fetchOptions,
-      apiKey: this.apiKey,
+      accessToken: this.accessToken,
       ...options,
     });
     return client;
@@ -286,23 +291,11 @@ export class Spotify {
   }
 
   protected validateHeaders({ values, nulls }: NullableHeaders) {
-    if (this.apiKey && values.get('authorization')) {
-      return;
-    }
-    if (nulls.has('authorization')) {
-      return;
-    }
-
-    throw new Error(
-      'Could not resolve authentication method. Expected the apiKey to be set. Or for the "Authorization" headers to be explicitly omitted',
-    );
+    return;
   }
 
   protected async authHeaders(opts: FinalRequestOptions): Promise<NullableHeaders | undefined> {
-    if (this.apiKey == null) {
-      return undefined;
-    }
-    return buildHeaders([{ Authorization: `Bearer ${this.apiKey}` }]);
+    return buildHeaders([{ Authorization: `Bearer ${this.accessToken}` }]);
   }
 
   protected stringifyQuery(query: Record<string, unknown>): string {
@@ -559,6 +552,25 @@ export class Spotify {
     );
 
     return { response, options, controller, requestLogID, retryOfRequestLogID, startTime };
+  }
+
+  getAPIList<Item, PageClass extends Pagination.AbstractPage<Item> = Pagination.AbstractPage<Item>>(
+    path: string,
+    Page: new (...args: any[]) => PageClass,
+    opts?: RequestOptions,
+  ): Pagination.PagePromise<PageClass, Item> {
+    return this.requestAPIList(Page, { method: 'get', path, ...opts });
+  }
+
+  requestAPIList<
+    Item = unknown,
+    PageClass extends Pagination.AbstractPage<Item> = Pagination.AbstractPage<Item>,
+  >(
+    Page: new (...args: ConstructorParameters<typeof Pagination.AbstractPage>) => PageClass,
+    options: FinalRequestOptions,
+  ): Pagination.PagePromise<PageClass, Item> {
+    const request = this.makeRequest(options, null, undefined);
+    return new Pagination.PagePromise<PageClass, Item>(this as any as Spotify, request, Page);
   }
 
   async fetchWithTimeout(
@@ -831,54 +843,55 @@ Spotify.Markets = Markets;
 export declare namespace Spotify {
   export type RequestOptions = Opts.RequestOptions;
 
+  export import CursorURLPage = Pagination.CursorURLPage;
+  export { type CursorURLPageResponse as CursorURLPageResponse };
+
   export {
     Albums as Albums,
     type AlbumRetrieveResponse as AlbumRetrieveResponse,
-    type AlbumListResponse as AlbumListResponse,
-    type AlbumGetTracksResponse as AlbumGetTracksResponse,
+    type AlbumBulkRetrieveResponse as AlbumBulkRetrieveResponse,
     type AlbumRetrieveParams as AlbumRetrieveParams,
-    type AlbumListParams as AlbumListParams,
-    type AlbumGetTracksParams as AlbumGetTracksParams,
+    type AlbumBulkRetrieveParams as AlbumBulkRetrieveParams,
+    type AlbumListTracksParams as AlbumListTracksParams,
   };
 
   export {
     Artists as Artists,
-    type ArtistRetrieveResponse as ArtistRetrieveResponse,
-    type ArtistListResponse as ArtistListResponse,
+    type ArtistBulkRetrieveResponse as ArtistBulkRetrieveResponse,
     type ArtistListAlbumsResponse as ArtistListAlbumsResponse,
     type ArtistListRelatedArtistsResponse as ArtistListRelatedArtistsResponse,
-    type ArtistListTopTracksResponse as ArtistListTopTracksResponse,
-    type ArtistListParams as ArtistListParams,
+    type ArtistTopTracksResponse as ArtistTopTracksResponse,
+    type ArtistListAlbumsResponsesCursorURLPage as ArtistListAlbumsResponsesCursorURLPage,
+    type ArtistBulkRetrieveParams as ArtistBulkRetrieveParams,
     type ArtistListAlbumsParams as ArtistListAlbumsParams,
-    type ArtistListTopTracksParams as ArtistListTopTracksParams,
+    type ArtistTopTracksParams as ArtistTopTracksParams,
   };
 
   export {
     Shows as Shows,
     type ShowRetrieveResponse as ShowRetrieveResponse,
-    type ShowListResponse as ShowListResponse,
-    type ShowGetEpisodesResponse as ShowGetEpisodesResponse,
+    type ShowBulkRetrieveResponse as ShowBulkRetrieveResponse,
     type ShowRetrieveParams as ShowRetrieveParams,
-    type ShowListParams as ShowListParams,
-    type ShowGetEpisodesParams as ShowGetEpisodesParams,
+    type ShowBulkRetrieveParams as ShowBulkRetrieveParams,
+    type ShowListEpisodesParams as ShowListEpisodesParams,
   };
 
   export {
     Episodes as Episodes,
-    type EpisodeRetrieveResponse as EpisodeRetrieveResponse,
-    type EpisodeListResponse as EpisodeListResponse,
+    type EpisodeBulkRetrieveResponse as EpisodeBulkRetrieveResponse,
     type EpisodeRetrieveParams as EpisodeRetrieveParams,
-    type EpisodeListParams as EpisodeListParams,
+    type EpisodeBulkRetrieveParams as EpisodeBulkRetrieveParams,
   };
 
   export {
     Audiobooks as Audiobooks,
+    type SimplifiedChapterObject as SimplifiedChapterObject,
     type AudiobookRetrieveResponse as AudiobookRetrieveResponse,
-    type AudiobookListResponse as AudiobookListResponse,
-    type AudiobookRetrieveChaptersResponse as AudiobookRetrieveChaptersResponse,
+    type AudiobookBulkRetrieveResponse as AudiobookBulkRetrieveResponse,
+    type SimplifiedChapterObjectsCursorURLPage as SimplifiedChapterObjectsCursorURLPage,
     type AudiobookRetrieveParams as AudiobookRetrieveParams,
-    type AudiobookListParams as AudiobookListParams,
-    type AudiobookRetrieveChaptersParams as AudiobookRetrieveChaptersParams,
+    type AudiobookBulkRetrieveParams as AudiobookBulkRetrieveParams,
+    type AudiobookListChaptersParams as AudiobookListChaptersParams,
   };
 
   export { Me as Me, type MeRetrieveResponse as MeRetrieveResponse };
@@ -886,23 +899,22 @@ export declare namespace Spotify {
   export {
     Chapters as Chapters,
     type ChapterRetrieveResponse as ChapterRetrieveResponse,
-    type ChapterListResponse as ChapterListResponse,
+    type ChapterBulkRetrieveResponse as ChapterBulkRetrieveResponse,
     type ChapterRetrieveParams as ChapterRetrieveParams,
-    type ChapterListParams as ChapterListParams,
+    type ChapterBulkRetrieveParams as ChapterBulkRetrieveParams,
   };
 
   export {
     Tracks as Tracks,
-    type TrackRetrieveResponse as TrackRetrieveResponse,
-    type TrackListResponse as TrackListResponse,
+    type TrackBulkRetrieveResponse as TrackBulkRetrieveResponse,
     type TrackRetrieveParams as TrackRetrieveParams,
-    type TrackListParams as TrackListParams,
+    type TrackBulkRetrieveParams as TrackBulkRetrieveParams,
   };
 
   export {
     Search as Search,
-    type SearchRetrieveResponse as SearchRetrieveResponse,
-    type SearchRetrieveParams as SearchRetrieveParams,
+    type SearchQueryResponse as SearchQueryResponse,
+    type SearchQueryParams as SearchQueryParams,
   };
 
   export {
@@ -925,21 +937,49 @@ export declare namespace Spotify {
   export {
     AudioFeatures as AudioFeatures,
     type AudioFeatureRetrieveResponse as AudioFeatureRetrieveResponse,
-    type AudioFeatureListResponse as AudioFeatureListResponse,
-    type AudioFeatureListParams as AudioFeatureListParams,
+    type AudioFeatureBulkRetrieveResponse as AudioFeatureBulkRetrieveResponse,
+    type AudioFeatureBulkRetrieveParams as AudioFeatureBulkRetrieveParams,
   };
 
   export {
     AudioAnalysis as AudioAnalysis,
+    type TimeIntervalObject as TimeIntervalObject,
     type AudioAnalysisRetrieveResponse as AudioAnalysisRetrieveResponse,
   };
 
   export {
     Recommendations as Recommendations,
-    type RecommendationListResponse as RecommendationListResponse,
+    type RecommendationGetResponse as RecommendationGetResponse,
     type RecommendationListAvailableGenreSeedsResponse as RecommendationListAvailableGenreSeedsResponse,
-    type RecommendationListParams as RecommendationListParams,
+    type RecommendationGetParams as RecommendationGetParams,
   };
 
   export { Markets as Markets, type MarketListResponse as MarketListResponse };
+
+  export type AlbumRestrictionObject = API.AlbumRestrictionObject;
+  export type ArtistObject = API.ArtistObject;
+  export type AudiobookBase = API.AudiobookBase;
+  export type AuthorObject = API.AuthorObject;
+  export type ChapterRestrictionObject = API.ChapterRestrictionObject;
+  export type CopyrightObject = API.CopyrightObject;
+  export type EpisodeObject = API.EpisodeObject;
+  export type EpisodeRestrictionObject = API.EpisodeRestrictionObject;
+  export type ExternalIDObject = API.ExternalIDObject;
+  export type ExternalURLObject = API.ExternalURLObject;
+  export type FollowersObject = API.FollowersObject;
+  export type ImageObject = API.ImageObject;
+  export type LinkedTrackObject = API.LinkedTrackObject;
+  export type NarratorObject = API.NarratorObject;
+  export type PagingPlaylistObject = API.PagingPlaylistObject;
+  export type PlaylistTrackObject = API.PlaylistTrackObject;
+  export type PlaylistTracksRefObject = API.PlaylistTracksRefObject;
+  export type PlaylistUserObject = API.PlaylistUserObject;
+  export type ResumePointObject = API.ResumePointObject;
+  export type ShowBase = API.ShowBase;
+  export type SimplifiedArtistObject = API.SimplifiedArtistObject;
+  export type SimplifiedEpisodeObject = API.SimplifiedEpisodeObject;
+  export type SimplifiedPlaylistObject = API.SimplifiedPlaylistObject;
+  export type SimplifiedTrackObject = API.SimplifiedTrackObject;
+  export type TrackObject = API.TrackObject;
+  export type TrackRestrictionObject = API.TrackRestrictionObject;
 }

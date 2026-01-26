@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
+import * as Shared from '../shared';
 import { APIPromise } from '../../core/api-promise';
 import { buildHeaders } from '../../internal/headers';
 import { RequestOptions } from '../../internal/request-options';
@@ -11,12 +12,15 @@ export class Following extends APIResource {
    *
    * @example
    * ```ts
-   * const followings = await client.me.following.list({
+   * const response = await client.me.following.bulkRetrieve({
    *   type: 'artist',
    * });
    * ```
    */
-  list(query: FollowingListParams, options?: RequestOptions): APIPromise<FollowingListResponse> {
+  bulkRetrieve(
+    query: FollowingBulkRetrieveParams,
+    options?: RequestOptions,
+  ): APIPromise<FollowingBulkRetrieveResponse> {
     return this._client.get('/me/following', { query, ...options });
   }
 
@@ -42,18 +46,11 @@ export class Following extends APIResource {
    *
    * @example
    * ```ts
-   * await client.me.following.follow({
-   *   query_ids:
-   *     '2CIMQHirSU0MQqyYHq0eOx,57dN52uHvrHOxijzpIgu3E,1vCWHaC5f2uS3yhpwWbIA6',
-   *   type: 'artist',
-   *   body_ids: ['string'],
-   * });
+   * await client.me.following.follow({ ids: ['string'] });
    * ```
    */
-  follow(params: FollowingFollowParams, options?: RequestOptions): APIPromise<void> {
-    const { query_ids, type, ...body } = params;
+  follow(body: FollowingFollowParams, options?: RequestOptions): APIPromise<void> {
     return this._client.put('/me/following', {
-      query: { ids: query_ids, type },
       body,
       ...options,
       headers: buildHeaders([{ Accept: '*/*' }, options?.headers]),
@@ -66,17 +63,14 @@ export class Following extends APIResource {
    *
    * @example
    * ```ts
-   * await client.me.following.unfollow({
-   *   query_ids:
-   *     '2CIMQHirSU0MQqyYHq0eOx,57dN52uHvrHOxijzpIgu3E,1vCWHaC5f2uS3yhpwWbIA6',
-   *   type: 'artist',
-   * });
+   * await client.me.following.unfollow();
    * ```
    */
-  unfollow(params: FollowingUnfollowParams, options?: RequestOptions): APIPromise<void> {
-    const { query_ids, type, ...body } = params;
+  unfollow(
+    body: FollowingUnfollowParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<void> {
     return this._client.delete('/me/following', {
-      query: { ids: query_ids, type },
       body,
       ...options,
       headers: buildHeaders([{ Accept: '*/*' }, options?.headers]),
@@ -84,11 +78,11 @@ export class Following extends APIResource {
   }
 }
 
-export interface FollowingListResponse {
-  artists: FollowingListResponse.Artists;
+export interface FollowingBulkRetrieveResponse {
+  artists: FollowingBulkRetrieveResponse.Artists;
 }
 
-export namespace FollowingListResponse {
+export namespace FollowingBulkRetrieveResponse {
   export interface Artists {
     /**
      * The cursors used to find the next set of items.
@@ -100,7 +94,7 @@ export namespace FollowingListResponse {
      */
     href?: string;
 
-    items?: Array<Artists.Item>;
+    items?: Array<Shared.ArtistObject>;
 
     /**
      * The maximum number of items in the response (as set in the query or by default).
@@ -111,6 +105,15 @@ export namespace FollowingListResponse {
      * URL to the next page of items. ( `null` if none)
      */
     next?: string;
+
+    /**
+     * The playlist's public/private status (if it should be added to the user's
+     * profile or not): `true` the playlist will be public, `false` the playlist will
+     * be private, `null` the playlist status is not relevant. For more about
+     * public/private status, see
+     * [Working with Playlists](/documentation/web-api/concepts/playlists)
+     */
+    published?: boolean;
 
     /**
      * The total number of items available to return.
@@ -132,116 +135,22 @@ export namespace FollowingListResponse {
        * The cursor to use as key to find the previous page of items.
        */
       before?: string;
-    }
-
-    export interface Item {
-      /**
-       * The [Spotify ID](/documentation/web-api/concepts/spotify-uris-ids) for the
-       * artist.
-       */
-      id?: string;
 
       /**
-       * Known external URLs for this artist.
+       * The playlist's public/private status (if it should be added to the user's
+       * profile or not): `true` the playlist will be public, `false` the playlist will
+       * be private, `null` the playlist status is not relevant. For more about
+       * public/private status, see
+       * [Working with Playlists](/documentation/web-api/concepts/playlists)
        */
-      external_urls?: Item.ExternalURLs;
-
-      /**
-       * Information about the followers of the artist.
-       */
-      followers?: Item.Followers;
-
-      /**
-       * A list of the genres the artist is associated with. If not yet classified, the
-       * array is empty.
-       */
-      genres?: Array<string>;
-
-      /**
-       * A link to the Web API endpoint providing full details of the artist.
-       */
-      href?: string;
-
-      /**
-       * Images of the artist in various sizes, widest first.
-       */
-      images?: Array<Item.Image>;
-
-      /**
-       * The name of the artist.
-       */
-      name?: string;
-
-      /**
-       * The popularity of the artist. The value will be between 0 and 100, with 100
-       * being the most popular. The artist's popularity is calculated from the
-       * popularity of all the artist's tracks.
-       */
-      popularity?: number;
-
-      /**
-       * The object type.
-       */
-      type?: 'artist';
-
-      /**
-       * The [Spotify URI](/documentation/web-api/concepts/spotify-uris-ids) for the
-       * artist.
-       */
-      uri?: string;
-    }
-
-    export namespace Item {
-      /**
-       * Known external URLs for this artist.
-       */
-      export interface ExternalURLs {
-        /**
-         * The [Spotify URL](/documentation/web-api/concepts/spotify-uris-ids) for the
-         * object.
-         */
-        spotify?: string;
-      }
-
-      /**
-       * Information about the followers of the artist.
-       */
-      export interface Followers {
-        /**
-         * This will always be set to null, as the Web API does not support it at the
-         * moment.
-         */
-        href?: string | null;
-
-        /**
-         * The total number of followers.
-         */
-        total?: number;
-      }
-
-      export interface Image {
-        /**
-         * The image height in pixels.
-         */
-        height: number | null;
-
-        /**
-         * The source URL of the image.
-         */
-        url: string;
-
-        /**
-         * The image width in pixels.
-         */
-        width: number | null;
-      }
+      published?: boolean;
     }
   }
 }
 
 export type FollowingCheckResponse = Array<boolean>;
 
-export interface FollowingListParams {
+export interface FollowingBulkRetrieveParams {
   /**
    * The ID type: currently only `artist` is supported.
    */
@@ -275,60 +184,53 @@ export interface FollowingCheckParams {
 
 export interface FollowingFollowParams {
   /**
-   * Query param: A comma-separated list of the artist or the user
-   * [Spotify IDs](/documentation/web-api/concepts/spotify-uris-ids). A maximum of 50
-   * IDs can be sent in one request.
-   */
-  query_ids: string;
-
-  /**
-   * Query param: The ID type.
-   */
-  type: 'artist' | 'user';
-
-  /**
-   * Body param: A JSON array of the artist or user
+   * A JSON array of the artist or user
    * [Spotify IDs](/documentation/web-api/concepts/spotify-uris-ids). For example:
    * `{ids:["74ASZWbe4lXaubB36ztrGX", "08td7MxkoHQkXnWAYD8d6Q"]}`. A maximum of 50
    * IDs can be sent in one request. _**Note**: if the `ids` parameter is present in
    * the query string, any IDs listed here in the body will be ignored._
    */
-  body_ids: Array<string>;
+  ids: Array<string>;
+
+  /**
+   * The playlist's public/private status (if it should be added to the user's
+   * profile or not): `true` the playlist will be public, `false` the playlist will
+   * be private, `null` the playlist status is not relevant. For more about
+   * public/private status, see
+   * [Working with Playlists](/documentation/web-api/concepts/playlists)
+   */
+  published?: boolean;
 
   [k: string]: unknown;
 }
 
 export interface FollowingUnfollowParams {
   /**
-   * Query param: A comma-separated list of the artist or the user
-   * [Spotify IDs](/documentation/web-api/concepts/spotify-uris-ids). For example:
-   * `ids=74ASZWbe4lXaubB36ztrGX,08td7MxkoHQkXnWAYD8d6Q`. A maximum of 50 IDs can be
-   * sent in one request.
-   */
-  query_ids: string;
-
-  /**
-   * Query param: The ID type: either `artist` or `user`.
-   */
-  type: 'artist' | 'user';
-
-  /**
-   * Body param: A JSON array of the artist or user
+   * A JSON array of the artist or user
    * [Spotify IDs](/documentation/web-api/concepts/spotify-uris-ids). For example:
    * `{ids:["74ASZWbe4lXaubB36ztrGX", "08td7MxkoHQkXnWAYD8d6Q"]}`. A maximum of 50
    * IDs can be sent in one request. _**Note**: if the `ids` parameter is present in
    * the query string, any IDs listed here in the body will be ignored._
    */
-  body_ids?: Array<string>;
+  ids?: Array<string>;
+
+  /**
+   * The playlist's public/private status (if it should be added to the user's
+   * profile or not): `true` the playlist will be public, `false` the playlist will
+   * be private, `null` the playlist status is not relevant. For more about
+   * public/private status, see
+   * [Working with Playlists](/documentation/web-api/concepts/playlists)
+   */
+  published?: boolean;
 
   [k: string]: unknown;
 }
 
 export declare namespace Following {
   export {
-    type FollowingListResponse as FollowingListResponse,
+    type FollowingBulkRetrieveResponse as FollowingBulkRetrieveResponse,
     type FollowingCheckResponse as FollowingCheckResponse,
-    type FollowingListParams as FollowingListParams,
+    type FollowingBulkRetrieveParams as FollowingBulkRetrieveParams,
     type FollowingCheckParams as FollowingCheckParams,
     type FollowingFollowParams as FollowingFollowParams,
     type FollowingUnfollowParams as FollowingUnfollowParams,

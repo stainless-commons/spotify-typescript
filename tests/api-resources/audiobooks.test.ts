@@ -1,9 +1,9 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import Spotify from 'spotify';
+import Spotify from 'spotify-ts';
 
 const client = new Spotify({
-  apiKey: 'My API Key',
+  accessToken: 'My Access Token',
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
@@ -33,8 +33,8 @@ describe('resource audiobooks', () => {
   });
 
   // Prism tests are disabled
-  test.skip('list: only required params', async () => {
-    const responsePromise = client.audiobooks.list({
+  test.skip('bulkRetrieve: only required params', async () => {
+    const responsePromise = client.audiobooks.bulkRetrieve({
       ids: '18yVqkdbdRvS24c0Ilj2ci,1HGw3J3NxZO1TP1BTtVhpZ,7iHfbu1YPACw6oZPAFJtqe',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -47,16 +47,16 @@ describe('resource audiobooks', () => {
   });
 
   // Prism tests are disabled
-  test.skip('list: required and optional params', async () => {
-    const response = await client.audiobooks.list({
+  test.skip('bulkRetrieve: required and optional params', async () => {
+    const response = await client.audiobooks.bulkRetrieve({
       ids: '18yVqkdbdRvS24c0Ilj2ci,1HGw3J3NxZO1TP1BTtVhpZ,7iHfbu1YPACw6oZPAFJtqe',
       market: 'ES',
     });
   });
 
   // Prism tests are disabled
-  test.skip('retrieveChapters', async () => {
-    const responsePromise = client.audiobooks.retrieveChapters('7iHfbu1YPACw6oZPAFJtqe');
+  test.skip('listChapters', async () => {
+    const responsePromise = client.audiobooks.listChapters('7iHfbu1YPACw6oZPAFJtqe');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -67,10 +67,10 @@ describe('resource audiobooks', () => {
   });
 
   // Prism tests are disabled
-  test.skip('retrieveChapters: request options and params are passed correctly', async () => {
+  test.skip('listChapters: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.audiobooks.retrieveChapters(
+      client.audiobooks.listChapters(
         '7iHfbu1YPACw6oZPAFJtqe',
         {
           limit: 10,

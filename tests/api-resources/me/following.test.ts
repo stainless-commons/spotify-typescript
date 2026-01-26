@@ -1,16 +1,16 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import Spotify from 'spotify';
+import Spotify from 'spotify-ts';
 
 const client = new Spotify({
-  apiKey: 'My API Key',
+  accessToken: 'My Access Token',
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
 describe('resource following', () => {
   // Prism tests are disabled
-  test.skip('list: only required params', async () => {
-    const responsePromise = client.me.following.list({ type: 'artist' });
+  test.skip('bulkRetrieve: only required params', async () => {
+    const responsePromise = client.me.following.bulkRetrieve({ type: 'artist' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -21,8 +21,8 @@ describe('resource following', () => {
   });
 
   // Prism tests are disabled
-  test.skip('list: required and optional params', async () => {
-    const response = await client.me.following.list({
+  test.skip('bulkRetrieve: required and optional params', async () => {
+    const response = await client.me.following.bulkRetrieve({
       type: 'artist',
       after: '0I2XqVXqHScXjHhk6AYYRe',
       limit: 10,
@@ -54,11 +54,7 @@ describe('resource following', () => {
 
   // Prism tests are disabled
   test.skip('follow: only required params', async () => {
-    const responsePromise = client.me.following.follow({
-      query_ids: '2CIMQHirSU0MQqyYHq0eOx,57dN52uHvrHOxijzpIgu3E,1vCWHaC5f2uS3yhpwWbIA6',
-      type: 'artist',
-      body_ids: ['string'],
-    });
+    const responsePromise = client.me.following.follow({ ids: ['string'] });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -70,19 +66,12 @@ describe('resource following', () => {
 
   // Prism tests are disabled
   test.skip('follow: required and optional params', async () => {
-    const response = await client.me.following.follow({
-      query_ids: '2CIMQHirSU0MQqyYHq0eOx,57dN52uHvrHOxijzpIgu3E,1vCWHaC5f2uS3yhpwWbIA6',
-      type: 'artist',
-      body_ids: ['string'],
-    });
+    const response = await client.me.following.follow({ ids: ['string'], published: true });
   });
 
   // Prism tests are disabled
-  test.skip('unfollow: only required params', async () => {
-    const responsePromise = client.me.following.unfollow({
-      query_ids: '2CIMQHirSU0MQqyYHq0eOx,57dN52uHvrHOxijzpIgu3E,1vCWHaC5f2uS3yhpwWbIA6',
-      type: 'artist',
-    });
+  test.skip('unfollow', async () => {
+    const responsePromise = client.me.following.unfollow();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -93,11 +82,13 @@ describe('resource following', () => {
   });
 
   // Prism tests are disabled
-  test.skip('unfollow: required and optional params', async () => {
-    const response = await client.me.following.unfollow({
-      query_ids: '2CIMQHirSU0MQqyYHq0eOx,57dN52uHvrHOxijzpIgu3E,1vCWHaC5f2uS3yhpwWbIA6',
-      type: 'artist',
-      body_ids: ['string'],
-    });
+  test.skip('unfollow: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.me.following.unfollow(
+        { ids: ['string'], published: true },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Spotify.NotFoundError);
   });
 });

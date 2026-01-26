@@ -1,9 +1,9 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import Spotify from 'spotify';
+import Spotify from 'spotify-ts';
 
 const client = new Spotify({
-  apiKey: 'My API Key',
+  accessToken: 'My Access Token',
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
@@ -21,8 +21,8 @@ describe('resource artists', () => {
   });
 
   // Prism tests are disabled
-  test.skip('list: only required params', async () => {
-    const responsePromise = client.artists.list({
+  test.skip('bulkRetrieve: only required params', async () => {
+    const responsePromise = client.artists.bulkRetrieve({
       ids: '2CIMQHirSU0MQqyYHq0eOx,57dN52uHvrHOxijzpIgu3E,1vCWHaC5f2uS3yhpwWbIA6',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -35,8 +35,8 @@ describe('resource artists', () => {
   });
 
   // Prism tests are disabled
-  test.skip('list: required and optional params', async () => {
-    const response = await client.artists.list({
+  test.skip('bulkRetrieve: required and optional params', async () => {
+    const response = await client.artists.bulkRetrieve({
       ids: '2CIMQHirSU0MQqyYHq0eOx,57dN52uHvrHOxijzpIgu3E,1vCWHaC5f2uS3yhpwWbIA6',
     });
   });
@@ -83,8 +83,8 @@ describe('resource artists', () => {
   });
 
   // Prism tests are disabled
-  test.skip('listTopTracks', async () => {
-    const responsePromise = client.artists.listTopTracks('0TnOYISbd1XYRBk9myaseg');
+  test.skip('topTracks', async () => {
+    const responsePromise = client.artists.topTracks('0TnOYISbd1XYRBk9myaseg');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -95,10 +95,10 @@ describe('resource artists', () => {
   });
 
   // Prism tests are disabled
-  test.skip('listTopTracks: request options and params are passed correctly', async () => {
+  test.skip('topTracks: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.artists.listTopTracks(
+      client.artists.topTracks(
         '0TnOYISbd1XYRBk9myaseg',
         { market: 'ES' },
         { path: '/_stainless_unknown_path' },

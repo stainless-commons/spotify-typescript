@@ -1,7 +1,9 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
+import * as Shared from '../shared';
 import { APIPromise } from '../../core/api-promise';
+import { CursorURLPage, PagePromise } from '../../core/pagination';
 import { buildHeaders } from '../../internal/headers';
 import { RequestOptions } from '../../internal/request-options';
 
@@ -12,14 +14,17 @@ export class Albums extends APIResource {
    *
    * @example
    * ```ts
-   * const albums = await client.me.albums.list();
+   * // Automatically fetches more pages as needed.
+   * for await (const albumListResponse of client.me.albums.list()) {
+   *   // ...
+   * }
    * ```
    */
   list(
     query: AlbumListParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<AlbumListResponse> {
-    return this._client.get('/me/albums', { query, ...options });
+  ): PagePromise<AlbumListResponsesCursorURLPage, AlbumListResponse> {
+    return this._client.getAPIList('/me/albums', CursorURLPage<AlbumListResponse>, { query, ...options });
   }
 
   /**
@@ -42,16 +47,11 @@ export class Albums extends APIResource {
    *
    * @example
    * ```ts
-   * await client.me.albums.remove({
-   *   query_ids:
-   *     '382ObEPsp2rxGrnsizN5TX,1A2GTWGtFfWp7KSQTwWOyo,2noRn2Aes5aoNVsU6iWThc',
-   * });
+   * await client.me.albums.remove();
    * ```
    */
-  remove(params: AlbumRemoveParams, options?: RequestOptions): APIPromise<void> {
-    const { query_ids, ...body } = params;
+  remove(body: AlbumRemoveParams | null | undefined = {}, options?: RequestOptions): APIPromise<void> {
     return this._client.delete('/me/albums', {
-      query: { ids: query_ids },
       body,
       ...options,
       headers: buildHeaders([{ Accept: '*/*' }, options?.headers]),
@@ -63,16 +63,11 @@ export class Albums extends APIResource {
    *
    * @example
    * ```ts
-   * await client.me.albums.save({
-   *   query_ids:
-   *     '382ObEPsp2rxGrnsizN5TX,1A2GTWGtFfWp7KSQTwWOyo,2noRn2Aes5aoNVsU6iWThc',
-   * });
+   * await client.me.albums.save();
    * ```
    */
-  save(params: AlbumSaveParams, options?: RequestOptions): APIPromise<void> {
-    const { query_ids, ...body } = params;
+  save(body: AlbumSaveParams | null | undefined = {}, options?: RequestOptions): APIPromise<void> {
     return this._client.put('/me/albums', {
-      query: { ids: query_ids },
       body,
       ...options,
       headers: buildHeaders([{ Accept: '*/*' }, options?.headers]),
@@ -80,558 +75,201 @@ export class Albums extends APIResource {
   }
 }
 
+export type AlbumListResponsesCursorURLPage = CursorURLPage<AlbumListResponse>;
+
 export interface AlbumListResponse {
   /**
-   * A link to the Web API endpoint returning the full result of the request
+   * The date and time the album was saved Timestamps are returned in ISO 8601 format
+   * as Coordinated Universal Time (UTC) with a zero offset: YYYY-MM-DDTHH:MM:SSZ. If
+   * the time is imprecise (for example, the date/time of an album release), an
+   * additional field indicates the precision; see for example, release_date in an
+   * album object.
    */
-  href: string;
-
-  items: Array<AlbumListResponse.Item>;
-
-  /**
-   * The maximum number of items in the response (as set in the query or by default).
-   */
-  limit: number;
+  added_at?: string;
 
   /**
-   * URL to the next page of items. ( `null` if none)
+   * Information about the album.
    */
-  next: string | null;
+  album?: AlbumListResponse.Album;
 
   /**
-   * The offset of the items returned (as set in the query or by default)
+   * The playlist's public/private status (if it should be added to the user's
+   * profile or not): `true` the playlist will be public, `false` the playlist will
+   * be private, `null` the playlist status is not relevant. For more about
+   * public/private status, see
+   * [Working with Playlists](/documentation/web-api/concepts/playlists)
    */
-  offset: number;
-
-  /**
-   * URL to the previous page of items. ( `null` if none)
-   */
-  previous: string | null;
-
-  /**
-   * The total number of items available to return.
-   */
-  total: number;
+  published?: boolean;
 }
 
 export namespace AlbumListResponse {
-  export interface Item {
+  /**
+   * Information about the album.
+   */
+  export interface Album {
     /**
-     * The date and time the album was saved Timestamps are returned in ISO 8601 format
-     * as Coordinated Universal Time (UTC) with a zero offset: YYYY-MM-DDTHH:MM:SSZ. If
-     * the time is imprecise (for example, the date/time of an album release), an
-     * additional field indicates the precision; see for example, release_date in an
-     * album object.
+     * The [Spotify ID](/documentation/web-api/concepts/spotify-uris-ids) for the
+     * album.
      */
-    added_at?: string;
+    id: string;
 
     /**
-     * Information about the album.
+     * The type of the album.
      */
-    album?: Item.Album;
+    album_type: 'album' | 'single' | 'compilation';
+
+    /**
+     * The markets in which the album is available:
+     * [ISO 3166-1 alpha-2 country codes](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).
+     * _**NOTE**: an album is considered available in a market when at least 1 of its
+     * tracks is available in that market._
+     */
+    available_markets: Array<string>;
+
+    /**
+     * Known external URLs for this album.
+     */
+    external_urls: Shared.ExternalURLObject;
+
+    /**
+     * A link to the Web API endpoint providing full details of the album.
+     */
+    href: string;
+
+    /**
+     * The cover art for the album in various sizes, widest first.
+     */
+    images: Array<Shared.ImageObject>;
+
+    /**
+     * The name of the album. In case of an album takedown, the value may be an empty
+     * string.
+     */
+    name: string;
+
+    /**
+     * The date the album was first released.
+     */
+    release_date: string;
+
+    /**
+     * The precision with which `release_date` value is known.
+     */
+    release_date_precision: 'year' | 'month' | 'day';
+
+    /**
+     * The number of tracks in the album.
+     */
+    total_tracks: number;
+
+    /**
+     * The object type.
+     */
+    type: 'album';
+
+    /**
+     * The [Spotify URI](/documentation/web-api/concepts/spotify-uris-ids) for the
+     * album.
+     */
+    uri: string;
+
+    /**
+     * The artists of the album. Each artist object includes a link in `href` to more
+     * detailed information about the artist.
+     */
+    artists?: Array<Shared.SimplifiedArtistObject>;
+
+    /**
+     * The copyright statements of the album.
+     */
+    copyrights?: Array<Shared.CopyrightObject>;
+
+    /**
+     * Known external IDs for the album.
+     */
+    external_ids?: Shared.ExternalIDObject;
+
+    /**
+     * @deprecated **Deprecated** The array is always empty.
+     */
+    genres?: Array<string>;
+
+    /**
+     * The label associated with the album.
+     */
+    label?: string;
+
+    /**
+     * The popularity of the album. The value will be between 0 and 100, with 100 being
+     * the most popular.
+     */
+    popularity?: number;
+
+    /**
+     * The playlist's public/private status (if it should be added to the user's
+     * profile or not): `true` the playlist will be public, `false` the playlist will
+     * be private, `null` the playlist status is not relevant. For more about
+     * public/private status, see
+     * [Working with Playlists](/documentation/web-api/concepts/playlists)
+     */
+    published?: boolean;
+
+    /**
+     * Included in the response when a content restriction is applied.
+     */
+    restrictions?: Shared.AlbumRestrictionObject;
+
+    /**
+     * The tracks of the album.
+     */
+    tracks?: Album.Tracks;
   }
 
-  export namespace Item {
+  export namespace Album {
     /**
-     * Information about the album.
+     * The tracks of the album.
      */
-    export interface Album {
+    export interface Tracks {
       /**
-       * The [Spotify ID](/documentation/web-api/concepts/spotify-uris-ids) for the
-       * album.
-       */
-      id: string;
-
-      /**
-       * The type of the album.
-       */
-      album_type: 'album' | 'single' | 'compilation';
-
-      /**
-       * The markets in which the album is available:
-       * [ISO 3166-1 alpha-2 country codes](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).
-       * _**NOTE**: an album is considered available in a market when at least 1 of its
-       * tracks is available in that market._
-       */
-      available_markets: Array<string>;
-
-      /**
-       * Known external URLs for this album.
-       */
-      external_urls: Album.ExternalURLs;
-
-      /**
-       * A link to the Web API endpoint providing full details of the album.
+       * A link to the Web API endpoint returning the full result of the request
        */
       href: string;
 
       /**
-       * The cover art for the album in various sizes, widest first.
+       * The maximum number of items in the response (as set in the query or by default).
        */
-      images: Array<Album.Image>;
+      limit: number;
 
       /**
-       * The name of the album. In case of an album takedown, the value may be an empty
-       * string.
+       * URL to the next page of items. ( `null` if none)
        */
-      name: string;
+      next: string | null;
 
       /**
-       * The date the album was first released.
+       * The offset of the items returned (as set in the query or by default)
        */
-      release_date: string;
+      offset: number;
 
       /**
-       * The precision with which `release_date` value is known.
+       * URL to the previous page of items. ( `null` if none)
        */
-      release_date_precision: 'year' | 'month' | 'day';
+      previous: string | null;
 
       /**
-       * The number of tracks in the album.
+       * The total number of items available to return.
        */
-      total_tracks: number;
+      total: number;
+
+      items?: Array<Shared.SimplifiedTrackObject>;
 
       /**
-       * The object type.
+       * The playlist's public/private status (if it should be added to the user's
+       * profile or not): `true` the playlist will be public, `false` the playlist will
+       * be private, `null` the playlist status is not relevant. For more about
+       * public/private status, see
+       * [Working with Playlists](/documentation/web-api/concepts/playlists)
        */
-      type: 'album';
-
-      /**
-       * The [Spotify URI](/documentation/web-api/concepts/spotify-uris-ids) for the
-       * album.
-       */
-      uri: string;
-
-      /**
-       * The artists of the album. Each artist object includes a link in `href` to more
-       * detailed information about the artist.
-       */
-      artists?: Array<Album.Artist>;
-
-      /**
-       * The copyright statements of the album.
-       */
-      copyrights?: Array<Album.Copyright>;
-
-      /**
-       * Known external IDs for the album.
-       */
-      external_ids?: Album.ExternalIDs;
-
-      /**
-       * @deprecated **Deprecated** The array is always empty.
-       */
-      genres?: Array<string>;
-
-      /**
-       * The label associated with the album.
-       */
-      label?: string;
-
-      /**
-       * The popularity of the album. The value will be between 0 and 100, with 100 being
-       * the most popular.
-       */
-      popularity?: number;
-
-      /**
-       * Included in the response when a content restriction is applied.
-       */
-      restrictions?: Album.Restrictions;
-
-      /**
-       * The tracks of the album.
-       */
-      tracks?: Album.Tracks;
-    }
-
-    export namespace Album {
-      /**
-       * Known external URLs for this album.
-       */
-      export interface ExternalURLs {
-        /**
-         * The [Spotify URL](/documentation/web-api/concepts/spotify-uris-ids) for the
-         * object.
-         */
-        spotify?: string;
-      }
-
-      export interface Image {
-        /**
-         * The image height in pixels.
-         */
-        height: number | null;
-
-        /**
-         * The source URL of the image.
-         */
-        url: string;
-
-        /**
-         * The image width in pixels.
-         */
-        width: number | null;
-      }
-
-      export interface Artist {
-        /**
-         * The [Spotify ID](/documentation/web-api/concepts/spotify-uris-ids) for the
-         * artist.
-         */
-        id?: string;
-
-        /**
-         * Known external URLs for this artist.
-         */
-        external_urls?: Artist.ExternalURLs;
-
-        /**
-         * A link to the Web API endpoint providing full details of the artist.
-         */
-        href?: string;
-
-        /**
-         * The name of the artist.
-         */
-        name?: string;
-
-        /**
-         * The object type.
-         */
-        type?: 'artist';
-
-        /**
-         * The [Spotify URI](/documentation/web-api/concepts/spotify-uris-ids) for the
-         * artist.
-         */
-        uri?: string;
-      }
-
-      export namespace Artist {
-        /**
-         * Known external URLs for this artist.
-         */
-        export interface ExternalURLs {
-          /**
-           * The [Spotify URL](/documentation/web-api/concepts/spotify-uris-ids) for the
-           * object.
-           */
-          spotify?: string;
-        }
-      }
-
-      export interface Copyright {
-        /**
-         * The copyright text for this content.
-         */
-        text?: string;
-
-        /**
-         * The type of copyright: `C` = the copyright, `P` = the sound recording
-         * (performance) copyright.
-         */
-        type?: string;
-      }
-
-      /**
-       * Known external IDs for the album.
-       */
-      export interface ExternalIDs {
-        /**
-         * [International Article Number](http://en.wikipedia.org/wiki/International_Article_Number_%28EAN%29)
-         */
-        ean?: string;
-
-        /**
-         * [International Standard Recording Code](http://en.wikipedia.org/wiki/International_Standard_Recording_Code)
-         */
-        isrc?: string;
-
-        /**
-         * [Universal Product Code](http://en.wikipedia.org/wiki/Universal_Product_Code)
-         */
-        upc?: string;
-      }
-
-      /**
-       * Included in the response when a content restriction is applied.
-       */
-      export interface Restrictions {
-        /**
-         * The reason for the restriction. Albums may be restricted if the content is not
-         * available in a given market, to the user's subscription type, or when the user's
-         * account is set to not play explicit content. Additional reasons may be added in
-         * the future.
-         */
-        reason?: 'market' | 'product' | 'explicit';
-      }
-
-      /**
-       * The tracks of the album.
-       */
-      export interface Tracks {
-        /**
-         * A link to the Web API endpoint returning the full result of the request
-         */
-        href: string;
-
-        items: Array<Tracks.Item>;
-
-        /**
-         * The maximum number of items in the response (as set in the query or by default).
-         */
-        limit: number;
-
-        /**
-         * URL to the next page of items. ( `null` if none)
-         */
-        next: string | null;
-
-        /**
-         * The offset of the items returned (as set in the query or by default)
-         */
-        offset: number;
-
-        /**
-         * URL to the previous page of items. ( `null` if none)
-         */
-        previous: string | null;
-
-        /**
-         * The total number of items available to return.
-         */
-        total: number;
-      }
-
-      export namespace Tracks {
-        export interface Item {
-          /**
-           * The [Spotify ID](/documentation/web-api/concepts/spotify-uris-ids) for the
-           * track.
-           */
-          id?: string;
-
-          /**
-           * The artists who performed the track. Each artist object includes a link in
-           * `href` to more detailed information about the artist.
-           */
-          artists?: Array<Item.Artist>;
-
-          /**
-           * A list of the countries in which the track can be played, identified by their
-           * [ISO 3166-1 alpha-2](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) code.
-           */
-          available_markets?: Array<string>;
-
-          /**
-           * The disc number (usually `1` unless the album consists of more than one disc).
-           */
-          disc_number?: number;
-
-          /**
-           * The track length in milliseconds.
-           */
-          duration_ms?: number;
-
-          /**
-           * Whether or not the track has explicit lyrics ( `true` = yes it does; `false` =
-           * no it does not OR unknown).
-           */
-          explicit?: boolean;
-
-          /**
-           * External URLs for this track.
-           */
-          external_urls?: Item.ExternalURLs;
-
-          /**
-           * A link to the Web API endpoint providing full details of the track.
-           */
-          href?: string;
-
-          /**
-           * Whether or not the track is from a local file.
-           */
-          is_local?: boolean;
-
-          /**
-           * Part of the response when
-           * [Track Relinking](/documentation/web-api/concepts/track-relinking/) is applied.
-           * If `true`, the track is playable in the given market. Otherwise `false`.
-           */
-          is_playable?: boolean;
-
-          /**
-           * Part of the response when
-           * [Track Relinking](/documentation/web-api/concepts/track-relinking/) is applied
-           * and is only part of the response if the track linking, in fact, exists. The
-           * requested track has been replaced with a different track. The track in the
-           * `linked_from` object contains information about the originally requested track.
-           */
-          linked_from?: Item.LinkedFrom;
-
-          /**
-           * The name of the track.
-           */
-          name?: string;
-
-          /**
-           * @deprecated A URL to a 30 second preview (MP3 format) of the track.
-           */
-          preview_url?: string | null;
-
-          /**
-           * Included in the response when a content restriction is applied.
-           */
-          restrictions?: Item.Restrictions;
-
-          /**
-           * The number of the track. If an album has several discs, the track number is the
-           * number on the specified disc.
-           */
-          track_number?: number;
-
-          /**
-           * The object type: "track".
-           */
-          type?: string;
-
-          /**
-           * The [Spotify URI](/documentation/web-api/concepts/spotify-uris-ids) for the
-           * track.
-           */
-          uri?: string;
-        }
-
-        export namespace Item {
-          export interface Artist {
-            /**
-             * The [Spotify ID](/documentation/web-api/concepts/spotify-uris-ids) for the
-             * artist.
-             */
-            id?: string;
-
-            /**
-             * Known external URLs for this artist.
-             */
-            external_urls?: Artist.ExternalURLs;
-
-            /**
-             * A link to the Web API endpoint providing full details of the artist.
-             */
-            href?: string;
-
-            /**
-             * The name of the artist.
-             */
-            name?: string;
-
-            /**
-             * The object type.
-             */
-            type?: 'artist';
-
-            /**
-             * The [Spotify URI](/documentation/web-api/concepts/spotify-uris-ids) for the
-             * artist.
-             */
-            uri?: string;
-          }
-
-          export namespace Artist {
-            /**
-             * Known external URLs for this artist.
-             */
-            export interface ExternalURLs {
-              /**
-               * The [Spotify URL](/documentation/web-api/concepts/spotify-uris-ids) for the
-               * object.
-               */
-              spotify?: string;
-            }
-          }
-
-          /**
-           * External URLs for this track.
-           */
-          export interface ExternalURLs {
-            /**
-             * The [Spotify URL](/documentation/web-api/concepts/spotify-uris-ids) for the
-             * object.
-             */
-            spotify?: string;
-          }
-
-          /**
-           * Part of the response when
-           * [Track Relinking](/documentation/web-api/concepts/track-relinking/) is applied
-           * and is only part of the response if the track linking, in fact, exists. The
-           * requested track has been replaced with a different track. The track in the
-           * `linked_from` object contains information about the originally requested track.
-           */
-          export interface LinkedFrom {
-            /**
-             * The [Spotify ID](/documentation/web-api/concepts/spotify-uris-ids) for the
-             * track.
-             */
-            id?: string;
-
-            /**
-             * Known external URLs for this track.
-             */
-            external_urls?: LinkedFrom.ExternalURLs;
-
-            /**
-             * A link to the Web API endpoint providing full details of the track.
-             */
-            href?: string;
-
-            /**
-             * The object type: "track".
-             */
-            type?: string;
-
-            /**
-             * The [Spotify URI](/documentation/web-api/concepts/spotify-uris-ids) for the
-             * track.
-             */
-            uri?: string;
-          }
-
-          export namespace LinkedFrom {
-            /**
-             * Known external URLs for this track.
-             */
-            export interface ExternalURLs {
-              /**
-               * The [Spotify URL](/documentation/web-api/concepts/spotify-uris-ids) for the
-               * object.
-               */
-              spotify?: string;
-            }
-          }
-
-          /**
-           * Included in the response when a content restriction is applied.
-           */
-          export interface Restrictions {
-            /**
-             * The reason for the restriction. Supported values:
-             *
-             * - `market` - The content item is not available in the given market.
-             * - `product` - The content item is not available for the user's subscription
-             *   type.
-             * - `explicit` - The content item is explicit and the user's account is set to not
-             *   play explicit content.
-             *
-             * Additional reasons may be added in the future. **Note**: If you use this field,
-             * make sure that your application safely handles unknown values.
-             */
-            reason?: string;
-          }
-        }
-      }
+      published?: boolean;
     }
   }
 }
@@ -675,40 +313,44 @@ export interface AlbumCheckParams {
 
 export interface AlbumRemoveParams {
   /**
-   * Query param: A comma-separated list of the
-   * [Spotify IDs](/documentation/web-api/concepts/spotify-uris-ids) for the albums.
-   * Maximum: 20 IDs.
-   */
-  query_ids: string;
-
-  /**
-   * Body param: A JSON array of the
+   * A JSON array of the
    * [Spotify IDs](/documentation/web-api/concepts/spotify-uris-ids). For example:
    * `["4iV5W9uYEdYUVa79Axb7Rh", "1301WleyT98MSxVHPZCA6M"]`<br/>A maximum of 50 items
    * can be specified in one request. _**Note**: if the `ids` parameter is present in
    * the query string, any IDs listed here in the body will be ignored._
    */
-  body_ids?: Array<string>;
+  ids?: Array<string>;
+
+  /**
+   * The playlist's public/private status (if it should be added to the user's
+   * profile or not): `true` the playlist will be public, `false` the playlist will
+   * be private, `null` the playlist status is not relevant. For more about
+   * public/private status, see
+   * [Working with Playlists](/documentation/web-api/concepts/playlists)
+   */
+  published?: boolean;
 
   [k: string]: unknown;
 }
 
 export interface AlbumSaveParams {
   /**
-   * Query param: A comma-separated list of the
-   * [Spotify IDs](/documentation/web-api/concepts/spotify-uris-ids) for the albums.
-   * Maximum: 20 IDs.
-   */
-  query_ids: string;
-
-  /**
-   * Body param: A JSON array of the
+   * A JSON array of the
    * [Spotify IDs](/documentation/web-api/concepts/spotify-uris-ids). For example:
    * `["4iV5W9uYEdYUVa79Axb7Rh", "1301WleyT98MSxVHPZCA6M"]`<br/>A maximum of 50 items
    * can be specified in one request. _**Note**: if the `ids` parameter is present in
    * the query string, any IDs listed here in the body will be ignored._
    */
-  body_ids?: Array<string>;
+  ids?: Array<string>;
+
+  /**
+   * The playlist's public/private status (if it should be added to the user's
+   * profile or not): `true` the playlist will be public, `false` the playlist will
+   * be private, `null` the playlist status is not relevant. For more about
+   * public/private status, see
+   * [Working with Playlists](/documentation/web-api/concepts/playlists)
+   */
+  published?: boolean;
 
   [k: string]: unknown;
 }
@@ -717,6 +359,7 @@ export declare namespace Albums {
   export {
     type AlbumListResponse as AlbumListResponse,
     type AlbumCheckResponse as AlbumCheckResponse,
+    type AlbumListResponsesCursorURLPage as AlbumListResponsesCursorURLPage,
     type AlbumListParams as AlbumListParams,
     type AlbumCheckParams as AlbumCheckParams,
     type AlbumRemoveParams as AlbumRemoveParams,

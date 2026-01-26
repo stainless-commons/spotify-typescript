@@ -1,4 +1,4 @@
-import { createPathTagFunction, encodeURIPath } from 'spotify/internal/utils/path';
+import { createPathTagFunction, encodeURIPath } from 'spotify-ts/internal/utils/path';
 import { inspect } from 'node:util';
 import { runInNewContext } from 'node:vm';
 
