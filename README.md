@@ -1,6 +1,6 @@
-# Unofficial Spotify API Library
+# Stainless Commons Spotify API Library
 
-[![NPM version](<https://img.shields.io/npm/v/spotify-ts.svg?label=npm%20(stable)>)](https://npmjs.org/package/spotify-ts) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/spotify-ts) [![JSR Version](https://jsr.io/badges/@stainless-commons/spotify-ts)](https://jsr.io/@stainless-commons/spotify-ts)
+[![NPM version](<https://img.shields.io/npm/v/spotify.svg?label=npm%20(stable)>)](https://npmjs.org/package/spotify) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/spotify)
 
 This library provides convenient access to the Spotify REST API from server-side TypeScript or JavaScript.
 
@@ -8,35 +8,14 @@ The REST API documentation can be found on [spotify.cjav.dev](https://spotify.cj
 
 It is generated with [Stainless](https://www.stainless.com/).
 
-## MCP Server
-
-Use the Spotify MCP Server to enable AI assistants to interact with this API, allowing them to explore endpoints, make test requests, and use documentation to help integrate this SDK into your application.
-
-[![Add to Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/en-US/install-mcp?name=spotify-ts-mcp&config=eyJuYW1lIjoic3BvdGlmeS10cy1tY3AiLCJ0cmFuc3BvcnQiOiJzc2UiLCJ1cmwiOiJodHRwczovL3Nwb3RpZnkuc3RsbWNwLmNvbS9zc2UifQ)
-[![Install in VS Code](https://img.shields.io/badge/_-Add_to_VS_Code-blue?style=for-the-badge&logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGZpbGw9Im5vbmUiIHZpZXdCb3g9IjAgMCA0MCA0MCI+PHBhdGggZmlsbD0iI0VFRSIgZmlsbC1ydWxlPSJldmVub2RkIiBkPSJNMzAuMjM1IDM5Ljg4NGEyLjQ5MSAyLjQ5MSAwIDAgMS0xLjc4MS0uNzNMMTIuNyAyNC43OGwtMy40NiAyLjYyNC0zLjQwNiAyLjU4MmExLjY2NSAxLjY2NSAwIDAgMS0xLjA4Mi4zMzggMS42NjQgMS42NjQgMCAwIDEtMS4wNDYtLjQzMWwtMi4yLTJhMS42NjYgMS42NjYgMCAwIDEgMC0yLjQ2M0w3LjQ1OCAyMCA0LjY3IDE3LjQ1MyAxLjUwNyAxNC41N2ExLjY2NSAxLjY2NSAwIDAgMSAwLTIuNDYzbDIuMi0yYTEuNjY1IDEuNjY1IDAgMCAxIDIuMTMtLjA5N2w2Ljg2MyA1LjIwOUwyOC40NTIuODQ0YTIuNDg4IDIuNDg4IDAgMCAxIDEuODQxLS43MjljLjM1MS4wMDkuNjk5LjA5MSAxLjAxOS4yNDVsOC4yMzYgMy45NjFhMi41IDIuNSAwIDAgMSAxLjQxNSAyLjI1M3YuMDk5LS4wNDVWMzMuMzd2LS4wNDUuMDk1YTIuNTAxIDIuNTAxIDAgMCAxLTEuNDE2IDIuMjU3bC04LjIzNSAzLjk2MWEyLjQ5MiAyLjQ5MiAwIDAgMS0xLjA3Ny4yNDZabS43MTYtMjguOTQ3LTExLjk0OCA5LjA2MiAxMS45NTIgOS4wNjUtLjAwNC0xOC4xMjdaIi8+PC9zdmc+)](https://vscode.stainless.com/mcp/%7B%22name%22%3A%22spotify-ts-mcp%22%2C%22type%22%3A%22sse%22%2C%22url%22%3A%22https%3A%2F%2Fspotify.stlmcp.com%2Fsse%22%7D)
-
-> Note: You may need to set environment variables in your MCP client.
-
 ## Installation
 
 ```sh
-npm install spotify-ts
+npm install git+ssh://git@github.com:stainless-sdks/spotify-typescript.git
 ```
 
-### Installation from JSR
-
-```sh
-deno add jsr:@stainless-commons/spotify-ts
-npx jsr add @stainless-commons/spotify-ts
-```
-
-These commands will make the module importable from the `@stainless-commons/spotify-ts` scope:
-
-You can also [import directly from JSR](https://jsr.io/docs/using-packages#importing-with-jsr-specifiers) without an install step if you're using the Deno JavaScript runtime:
-
-```ts
-import Spotify from 'jsr:@stainless-commons/spotify-ts';
-```
+> [!NOTE]
+> Once this package is [published to npm](https://www.stainless.com/docs/guides/publish), this will become: `npm install spotify`
 
 ## Usage
 
@@ -44,7 +23,7 @@ The full API of this library can be found in [api.md](api.md).
 
 <!-- prettier-ignore -->
 ```js
-import Spotify from 'spotify-ts';
+import Spotify from 'spotify';
 
 const client = new Spotify({
   accessToken: process.env['SPOTIFY_ACCESS_TOKEN'], // This is the default and can be omitted
@@ -61,7 +40,7 @@ This library includes TypeScript definitions for all request params and response
 
 <!-- prettier-ignore -->
 ```ts
-import Spotify from 'spotify-ts';
+import Spotify from 'spotify';
 
 const client = new Spotify({
   accessToken: process.env['SPOTIFY_ACCESS_TOKEN'], // This is the default and can be omitted
@@ -219,7 +198,7 @@ The log level can be configured in two ways:
 2. Using the `logLevel` client option (overrides the environment variable if set)
 
 ```ts
-import Spotify from 'spotify-ts';
+import Spotify from 'spotify';
 
 const client = new Spotify({
   logLevel: 'debug', // Show all log messages
@@ -247,7 +226,7 @@ When providing a custom logger, the `logLevel` option still controls which messa
 below the configured level will not be sent to your logger.
 
 ```ts
-import Spotify from 'spotify-ts';
+import Spotify from 'spotify';
 import pino from 'pino';
 
 const logger = pino();
@@ -316,7 +295,7 @@ globalThis.fetch = fetch;
 Or pass it to the client:
 
 ```ts
-import Spotify from 'spotify-ts';
+import Spotify from 'spotify';
 import fetch from 'my-fetch';
 
 const client = new Spotify({ fetch });
@@ -327,7 +306,7 @@ const client = new Spotify({ fetch });
 If you want to set custom `fetch` options without overriding the `fetch` function, you can provide a `fetchOptions` object when instantiating the client or making a request. (Request-specific options override client options.)
 
 ```ts
-import Spotify from 'spotify-ts';
+import Spotify from 'spotify';
 
 const client = new Spotify({
   fetchOptions: {
@@ -344,7 +323,7 @@ options to requests:
 <img src="https://raw.githubusercontent.com/stainless-api/sdk-assets/refs/heads/main/node.svg" align="top" width="18" height="21"> **Node** <sup>[[docs](https://github.com/nodejs/undici/blob/main/docs/docs/api/ProxyAgent.md#example---proxyagent-with-fetch)]</sup>
 
 ```ts
-import Spotify from 'spotify-ts';
+import Spotify from 'spotify';
 import * as undici from 'undici';
 
 const proxyAgent = new undici.ProxyAgent('http://localhost:8888');
@@ -358,7 +337,7 @@ const client = new Spotify({
 <img src="https://raw.githubusercontent.com/stainless-api/sdk-assets/refs/heads/main/bun.svg" align="top" width="18" height="21"> **Bun** <sup>[[docs](https://bun.sh/guides/http/proxy)]</sup>
 
 ```ts
-import Spotify from 'spotify-ts';
+import Spotify from 'spotify';
 
 const client = new Spotify({
   fetchOptions: {
@@ -370,7 +349,7 @@ const client = new Spotify({
 <img src="https://raw.githubusercontent.com/stainless-api/sdk-assets/refs/heads/main/deno.svg" align="top" width="18" height="21"> **Deno** <sup>[[docs](https://docs.deno.com/api/deno/~/Deno.createHttpClient)]</sup>
 
 ```ts
-import Spotify from 'jsr:@stainless-commons/spotify-ts';
+import Spotify from 'npm:spotify';
 
 const httpClient = Deno.createHttpClient({ proxy: { url: 'http://localhost:8888' } });
 const client = new Spotify({
@@ -392,7 +371,7 @@ This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) con
 
 We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
 
-We are keen for your feedback; please open an [issue](https://www.github.com/stainless-commons/spotify-ts/issues) with questions, bugs, or suggestions.
+We are keen for your feedback; please open an [issue](https://www.github.com/stainless-sdks/spotify-typescript/issues) with questions, bugs, or suggestions.
 
 ## Requirements
 

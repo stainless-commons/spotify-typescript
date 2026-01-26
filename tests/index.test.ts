@@ -1,10 +1,10 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { APIPromise } from 'spotify-ts/core/api-promise';
+import { APIPromise } from 'spotify/core/api-promise';
 
 import util from 'node:util';
-import Spotify from 'spotify-ts';
-import { APIUserAbortError } from 'spotify-ts';
+import Spotify from 'spotify';
+import { APIUserAbortError } from 'spotify';
 const defaultFetch = fetch;
 
 describe('instantiate client', () => {
