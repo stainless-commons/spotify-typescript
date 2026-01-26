@@ -8,8 +8,8 @@
     "moduleResolution": "node",
     "esModuleInterop": true,
     "paths": {
-      "spotify-ts/*": ["./src/*"],
-      "spotify-ts": ["./src/index.ts"]
+      "spotify/*": ["./src/*"],
+      "spotify": ["./src/index.ts"]
     },
     "noEmit": true,
 
@@ -30,7 +30,7 @@
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
-    "isolatedModules": true,
+    "isolatedModules": false,
 
     "skipLibCheck": true
   }

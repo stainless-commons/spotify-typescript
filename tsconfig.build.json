@@ -5,8 +5,8 @@
   "compilerOptions": {
     "rootDir": "./dist/src",
     "paths": {
-      "spotify-ts/*": ["./dist/src/*"],
-      "spotify-ts": ["./dist/src/index.ts"]
+      "spotify/*": ["./dist/src/*"],
+      "spotify": ["./dist/src/index.ts"]
     },
     "noEmit": false,
     "declaration": true,

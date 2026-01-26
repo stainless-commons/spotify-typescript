@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import Spotify from 'spotify-ts';
+import Spotify from 'spotify';
 
 const client = new Spotify({
   accessToken: 'My Access Token',
