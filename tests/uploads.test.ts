@@ -1,6 +1,6 @@
 import fs from 'fs';
-import type { ResponseLike } from 'spotify/internal/to-file';
-import { toFile } from 'spotify/core/uploads';
+import type { ResponseLike } from '@stainless-commons/spotify/internal/to-file';
+import { toFile } from '@stainless-commons/spotify/core/uploads';
 import { File } from 'node:buffer';
 
 class MyClass {
@@ -97,7 +97,7 @@ describe('missing File error message', () => {
   });
 
   test('is thrown', async () => {
-    const uploads = await import('spotify/core/uploads');
+    const uploads = await import('@stainless-commons/spotify/core/uploads');
     await expect(
       uploads.toFile(mockResponse({ url: 'https://example.com/my/audio.mp3' })),
     ).rejects.toMatchInlineSnapshot(

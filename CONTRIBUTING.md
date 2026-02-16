@@ -55,12 +55,12 @@ $ cd spotify-typescript
 # With yarn
 $ yarn link
 $ cd ../my-package
-$ yarn link spotify
+$ yarn link @stainless-commons/spotify
 
 # With pnpm
 $ pnpm link --global
 $ cd ../my-package
-$ pnpm link -—global spotify
+$ pnpm link -—global @stainless-commons/spotify
 ```
 
 ## Running tests
