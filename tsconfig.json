@@ -8,8 +8,8 @@
     "moduleResolution": "node",
     "esModuleInterop": true,
     "paths": {
-      "spotify/*": ["./src/*"],
-      "spotify": ["./src/index.ts"]
+      "@stainless-commons/spotify/*": ["./src/*"],
+      "@stainless-commons/spotify": ["./src/index.ts"]
     },
     "noEmit": true,
 

@@ -5,8 +5,8 @@
   "compilerOptions": {
     "rootDir": "./dist/src",
     "paths": {
-      "spotify/*": ["./dist/src/*"],
-      "spotify": ["./dist/src/index.ts"]
+      "@stainless-commons/spotify/*": ["./dist/src/*"],
+      "@stainless-commons/spotify": ["./dist/src/index.ts"]
     },
     "noEmit": false,
     "declaration": true,
