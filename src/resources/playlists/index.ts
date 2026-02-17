@@ -8,6 +8,16 @@ export {
 } from './followers';
 export { Images, type ImageListResponse } from './images';
 export {
+  Items,
+  type ItemUpdateResponse,
+  type ItemAddResponse,
+  type ItemRemoveResponse,
+  type ItemUpdateParams,
+  type ItemListParams,
+  type ItemAddParams,
+  type ItemRemoveParams,
+} from './items';
+export {
   Playlists,
   type PlaylistRetrieveResponse,
   type PlaylistRetrieveParams,

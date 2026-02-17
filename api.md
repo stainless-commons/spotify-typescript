@@ -123,8 +123,13 @@ Methods:
 
 ## Playlists
 
+Types:
+
+- <code><a href="./src/resources/me/playlists.ts">PlaylistCreateResponse</a></code>
+
 Methods:
 
+- <code title="post /me/playlists">client.me.playlists.<a href="./src/resources/me/playlists.ts">create</a>({ ...params }) -> PlaylistCreateResponse</code>
 - <code title="get /me/playlists">client.me.playlists.<a href="./src/resources/me/playlists.ts">list</a>({ ...params }) -> SimplifiedPlaylistObjectsCursorURLPage</code>
 
 ## Top
@@ -242,6 +247,18 @@ Methods:
 - <code title="post /me/player/queue">client.me.player.queue.<a href="./src/resources/me/player/queue.ts">add</a>({ ...params }) -> void</code>
 - <code title="get /me/player/queue">client.me.player.queue.<a href="./src/resources/me/player/queue.ts">get</a>() -> QueueGetResponse</code>
 
+## Library
+
+Types:
+
+- <code><a href="./src/resources/me/library.ts">LibraryCheckSavedItemsResponse</a></code>
+
+Methods:
+
+- <code title="get /me/library/contains">client.me.library.<a href="./src/resources/me/library.ts">checkSavedItems</a>({ ...params }) -> LibraryCheckSavedItemsResponse</code>
+- <code title="delete /me/library">client.me.library.<a href="./src/resources/me/library.ts">removeItems</a>({ ...params }) -> void</code>
+- <code title="put /me/library">client.me.library.<a href="./src/resources/me/library.ts">saveItems</a>({ ...params }) -> void</code>
+
 # Chapters
 
 Types:
@@ -323,6 +340,21 @@ Methods:
 
 - <code title="put /playlists/{playlist_id}/images">client.playlists.images.<a href="./src/resources/playlists/images.ts">update</a>(playlistID, body) -> Response</code>
 - <code title="get /playlists/{playlist_id}/images">client.playlists.images.<a href="./src/resources/playlists/images.ts">list</a>(playlistID) -> ImageListResponse</code>
+
+## Items
+
+Types:
+
+- <code><a href="./src/resources/playlists/items.ts">ItemUpdateResponse</a></code>
+- <code><a href="./src/resources/playlists/items.ts">ItemAddResponse</a></code>
+- <code><a href="./src/resources/playlists/items.ts">ItemRemoveResponse</a></code>
+
+Methods:
+
+- <code title="put /playlists/{playlist_id}/items">client.playlists.items.<a href="./src/resources/playlists/items.ts">update</a>(playlistID, { ...params }) -> ItemUpdateResponse</code>
+- <code title="get /playlists/{playlist_id}/items">client.playlists.items.<a href="./src/resources/playlists/items.ts">list</a>(playlistID, { ...params }) -> PlaylistTrackObjectsCursorURLPage</code>
+- <code title="post /playlists/{playlist_id}/items">client.playlists.items.<a href="./src/resources/playlists/items.ts">add</a>(playlistID, { ...params }) -> ItemAddResponse</code>
+- <code title="delete /playlists/{playlist_id}/items">client.playlists.items.<a href="./src/resources/playlists/items.ts">remove</a>(playlistID, { ...params }) -> ItemRemoveResponse</code>
 
 # Users
 

@@ -6,6 +6,17 @@ import * as FollowersAPI from './followers';
 import { FollowerCheckParams, FollowerCheckResponse, FollowerFollowParams, Followers } from './followers';
 import * as ImagesAPI from './images';
 import { ImageListResponse, Images } from './images';
+import * as ItemsAPI from './items';
+import {
+  ItemAddParams,
+  ItemAddResponse,
+  ItemListParams,
+  ItemRemoveParams,
+  ItemRemoveResponse,
+  ItemUpdateParams,
+  ItemUpdateResponse,
+  Items as ItemsAPIItems,
+} from './items';
 import * as TracksAPI from './tracks';
 import {
   TrackAddParams,
@@ -26,6 +37,7 @@ export class Playlists extends APIResource {
   tracks: TracksAPI.Tracks = new TracksAPI.Tracks(this._client);
   followers: FollowersAPI.Followers = new FollowersAPI.Followers(this._client);
   images: ImagesAPI.Images = new ImagesAPI.Images(this._client);
+  items: ItemsAPI.Items = new ItemsAPI.Items(this._client);
 
   /**
    * Get a playlist owned by a Spotify user.
@@ -110,6 +122,12 @@ export interface PlaylistRetrieveResponse {
   images?: Array<Shared.ImageObject>;
 
   /**
+   * The items of the playlist. _**Note**: This field is only available for playlists
+   * owned by the current user or playlists the user is a collaborator of._
+   */
+  items?: PlaylistRetrieveResponse.Items;
+
+  /**
    * The name of the playlist.
    */
   name?: string;
@@ -135,7 +153,7 @@ export interface PlaylistRetrieveResponse {
   snapshot_id?: string;
 
   /**
-   * The tracks of the playlist.
+   * @deprecated **Deprecated:** Use `items` instead. The tracks of the playlist.
    */
   tracks?: PlaylistRetrieveResponse.Tracks;
 
@@ -153,6 +171,53 @@ export interface PlaylistRetrieveResponse {
 
 export namespace PlaylistRetrieveResponse {
   /**
+   * The items of the playlist. _**Note**: This field is only available for playlists
+   * owned by the current user or playlists the user is a collaborator of._
+   */
+  export interface Items {
+    /**
+     * A link to the Web API endpoint returning the full result of the request
+     */
+    href: string;
+
+    /**
+     * The maximum number of items in the response (as set in the query or by default).
+     */
+    limit: number;
+
+    /**
+     * URL to the next page of items. ( `null` if none)
+     */
+    next: string | null;
+
+    /**
+     * The offset of the items returned (as set in the query or by default)
+     */
+    offset: number;
+
+    /**
+     * URL to the previous page of items. ( `null` if none)
+     */
+    previous: string | null;
+
+    /**
+     * The total number of items available to return.
+     */
+    total: number;
+
+    items?: Array<Shared.PlaylistTrackObject>;
+
+    /**
+     * The playlist's public/private status (if it should be added to the user's
+     * profile or not): `true` the playlist will be public, `false` the playlist will
+     * be private, `null` the playlist status is not relevant. For more about
+     * public/private status, see
+     * [Working with Playlists](/documentation/web-api/concepts/playlists)
+     */
+    published?: boolean;
+  }
+
+  /**
    * The user who owns the playlist
    */
   export interface Owner extends Shared.PlaylistUserObject {
@@ -163,7 +228,7 @@ export namespace PlaylistRetrieveResponse {
   }
 
   /**
-   * The tracks of the playlist.
+   * @deprecated **Deprecated:** Use `items` instead. The tracks of the playlist.
    */
   export interface Tracks {
     /**
@@ -282,6 +347,7 @@ export interface PlaylistUpdateParams {
 Playlists.Tracks = TracksAPITracks;
 Playlists.Followers = Followers;
 Playlists.Images = Images;
+Playlists.Items = ItemsAPIItems;
 
 export declare namespace Playlists {
   export {
@@ -309,4 +375,15 @@ export declare namespace Playlists {
   };
 
   export { Images as Images, type ImageListResponse as ImageListResponse };
+
+  export {
+    ItemsAPIItems as Items,
+    type ItemUpdateResponse as ItemUpdateResponse,
+    type ItemAddResponse as ItemAddResponse,
+    type ItemRemoveResponse as ItemRemoveResponse,
+    type ItemUpdateParams as ItemUpdateParams,
+    type ItemListParams as ItemListParams,
+    type ItemAddParams as ItemAddParams,
+    type ItemRemoveParams as ItemRemoveParams,
+  };
 }
