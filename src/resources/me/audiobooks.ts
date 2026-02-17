@@ -35,12 +35,11 @@ export class Audiobooks extends APIResource {
    * Check if one or more audiobooks are already saved in the current Spotify user's
    * library.
    *
-   * @example
-   * ```ts
-   * const response = await client.me.audiobooks.check({
-   *   ids: '18yVqkdbdRvS24c0Ilj2ci,1HGw3J3NxZO1TP1BTtVhpZ,7iHfbu1YPACw6oZPAFJtqe',
-   * });
-   * ```
+   * **Note:** This endpoint is deprecated. Use
+   * [Check User's Saved Items](/documentation/web-api/reference/check-library-contains)
+   * instead.
+   *
+   * @deprecated
    */
   check(query: AudiobookCheckParams, options?: RequestOptions): APIPromise<AudiobookCheckResponse> {
     return this._client.get('/me/audiobooks/contains', { query, ...options });
@@ -49,12 +48,11 @@ export class Audiobooks extends APIResource {
   /**
    * Remove one or more audiobooks from the Spotify user's library.
    *
-   * @example
-   * ```ts
-   * await client.me.audiobooks.remove({
-   *   ids: '18yVqkdbdRvS24c0Ilj2ci,1HGw3J3NxZO1TP1BTtVhpZ,7iHfbu1YPACw6oZPAFJtqe',
-   * });
-   * ```
+   * **Note:** This endpoint is deprecated. Use
+   * [Remove Items from Library](/documentation/web-api/reference/remove-library-items)
+   * instead.
+   *
+   * @deprecated
    */
   remove(params: AudiobookRemoveParams, options?: RequestOptions): APIPromise<void> {
     const { ids } = params;
@@ -68,12 +66,11 @@ export class Audiobooks extends APIResource {
   /**
    * Save one or more audiobooks to the current Spotify user's library.
    *
-   * @example
-   * ```ts
-   * await client.me.audiobooks.save({
-   *   ids: '18yVqkdbdRvS24c0Ilj2ci,1HGw3J3NxZO1TP1BTtVhpZ,7iHfbu1YPACw6oZPAFJtqe',
-   * });
-   * ```
+   * **Note:** This endpoint is deprecated. Use
+   * [Save Items to Library](/documentation/web-api/reference/save-library-items)
+   * instead.
+   *
+   * @deprecated
    */
   save(params: AudiobookSaveParams, options?: RequestOptions): APIPromise<void> {
     const { ids } = params;

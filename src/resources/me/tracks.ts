@@ -31,12 +31,11 @@ export class Tracks extends APIResource {
    * Check if one or more tracks is already saved in the current Spotify user's 'Your
    * Music' library.
    *
-   * @example
-   * ```ts
-   * const response = await client.me.tracks.check({
-   *   ids: '7ouMYWpwJ422jRcDASZB7P,4VqPOruhp5EdPBeR92t6lQ,2takcwOaAZWiXQijPHIx7B',
-   * });
-   * ```
+   * **Note:** This endpoint is deprecated. Use
+   * [Check User's Saved Items](/documentation/web-api/reference/check-library-contains)
+   * instead.
+   *
+   * @deprecated
    */
   check(query: TrackCheckParams, options?: RequestOptions): APIPromise<TrackCheckResponse> {
     return this._client.get('/me/tracks/contains', { query, ...options });
@@ -45,10 +44,11 @@ export class Tracks extends APIResource {
   /**
    * Remove one or more tracks from the current user's 'Your Music' library.
    *
-   * @example
-   * ```ts
-   * await client.me.tracks.remove();
-   * ```
+   * **Note:** This endpoint is deprecated. Use
+   * [Remove Items from Library](/documentation/web-api/reference/remove-library-items)
+   * instead.
+   *
+   * @deprecated
    */
   remove(body: TrackRemoveParams | null | undefined = {}, options?: RequestOptions): APIPromise<void> {
     return this._client.delete('/me/tracks', {
@@ -61,10 +61,11 @@ export class Tracks extends APIResource {
   /**
    * Save one or more tracks to the current user's 'Your Music' library.
    *
-   * @example
-   * ```ts
-   * await client.me.tracks.save({ ids: ['string'] });
-   * ```
+   * **Note:** This endpoint is deprecated. Use
+   * [Save Items to Library](/documentation/web-api/reference/save-library-items)
+   * instead.
+   *
+   * @deprecated
    */
   save(body: TrackSaveParams, options?: RequestOptions): APIPromise<void> {
     return this._client.put('/me/tracks', {
