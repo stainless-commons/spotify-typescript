@@ -25,9 +25,7 @@ The full API of this library can be found in [api.md](api.md).
 ```js
 import Spotify from '@stainless-commons/spotify';
 
-const client = new Spotify({
-  accessToken: process.env['SPOTIFY_ACCESS_TOKEN'], // This is the default and can be omitted
-});
+const client = new Spotify();
 
 const album = await client.albums.retrieve('4aawyAB9vmqN3uQ7FjRGTy');
 
@@ -42,9 +40,7 @@ This library includes TypeScript definitions for all request params and response
 ```ts
 import Spotify from '@stainless-commons/spotify';
 
-const client = new Spotify({
-  accessToken: process.env['SPOTIFY_ACCESS_TOKEN'], // This is the default and can be omitted
-});
+const client = new Spotify();
 
 const album: Spotify.AlbumRetrieveResponse = await client.albums.retrieve('4aawyAB9vmqN3uQ7FjRGTy');
 ```
