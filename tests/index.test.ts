@@ -23,8 +23,6 @@ describe('instantiate client', () => {
     const client = new Spotify({
       baseURL: 'http://localhost:5000/',
       defaultHeaders: { 'X-My-Default-Header': '2' },
-      clientID: 'My Client ID',
-      clientSecret: 'My Client Secret',
     });
 
     test('they are used in the request', async () => {
@@ -271,8 +269,6 @@ describe('instantiate client', () => {
   test('custom signal', async () => {
     const client = new Spotify({
       baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
-      clientID: 'My Client ID',
-      clientSecret: 'My Client Secret',
       fetch: (...args) => {
         return new Promise((resolve, reject) =>
           setTimeout(
@@ -435,8 +431,6 @@ describe('instantiate client', () => {
         baseURL: 'http://localhost:5000/',
         defaultHeaders: { 'X-Test-Header': 'test-value' },
         defaultQuery: { 'test-param': 'test-value' },
-        clientID: 'My Client ID',
-        clientSecret: 'My Client Secret',
       });
 
       const newClient = client.withOptions({
@@ -502,7 +496,7 @@ describe('instantiate client', () => {
 });
 
 describe('request building', () => {
-  const client = new Spotify({ clientID: 'My Client ID', clientSecret: 'My Client Secret' });
+  const client = new Spotify();
 
   describe('custom headers', () => {
     test('handles undefined', async () => {
@@ -521,7 +515,7 @@ describe('request building', () => {
 });
 
 describe('default encoder', () => {
-  const client = new Spotify({ clientID: 'My Client ID', clientSecret: 'My Client Secret' });
+  const client = new Spotify();
 
   class Serializable {
     toJSON() {
@@ -607,8 +601,6 @@ describe('retries', () => {
     };
 
     const client = new Spotify({
-      clientID: 'My Client ID',
-      clientSecret: 'My Client Secret',
       timeout: 10,
       fetch: testFetch,
     });
@@ -642,8 +634,6 @@ describe('retries', () => {
     };
 
     const client = new Spotify({
-      clientID: 'My Client ID',
-      clientSecret: 'My Client Secret',
       fetch: testFetch,
       maxRetries: 4,
     });
@@ -671,8 +661,6 @@ describe('retries', () => {
       return new Response(JSON.stringify({ a: 1 }), { headers: { 'Content-Type': 'application/json' } });
     };
     const client = new Spotify({
-      clientID: 'My Client ID',
-      clientSecret: 'My Client Secret',
       fetch: testFetch,
       maxRetries: 4,
     });
@@ -705,8 +693,6 @@ describe('retries', () => {
       return new Response(JSON.stringify({ a: 1 }), { headers: { 'Content-Type': 'application/json' } });
     };
     const client = new Spotify({
-      clientID: 'My Client ID',
-      clientSecret: 'My Client Secret',
       fetch: testFetch,
       maxRetries: 4,
       defaultHeaders: { 'X-Stainless-Retry-Count': null },
@@ -739,8 +725,6 @@ describe('retries', () => {
       return new Response(JSON.stringify({ a: 1 }), { headers: { 'Content-Type': 'application/json' } });
     };
     const client = new Spotify({
-      clientID: 'My Client ID',
-      clientSecret: 'My Client Secret',
       fetch: testFetch,
       maxRetries: 4,
     });
@@ -774,8 +758,6 @@ describe('retries', () => {
     };
 
     const client = new Spotify({
-      clientID: 'My Client ID',
-      clientSecret: 'My Client Secret',
       fetch: testFetch,
     });
 
@@ -808,8 +790,6 @@ describe('retries', () => {
     };
 
     const client = new Spotify({
-      clientID: 'My Client ID',
-      clientSecret: 'My Client Secret',
       fetch: testFetch,
     });
 
