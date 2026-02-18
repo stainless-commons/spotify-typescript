@@ -34,6 +34,51 @@ const album = await client.albums.retrieve('4aawyAB9vmqN3uQ7FjRGTy');
 console.log(album.id);
 ```
 
+## Authentication
+
+The SDK supports multiple authentication modes via the `SpotifyClient` class. Choose the mode that fits your use case.
+
+### Client Credentials (server-to-server)
+
+Use this when your app needs to access Spotify catalog data without a user context. Works for browsing albums, artists, playlists, and search. Cannot access user-specific endpoints (`/me`, saved tracks, user playlists, etc.).
+
+<!-- prettier-ignore -->
+```ts
+import { SpotifyClient } from '@stainless-commons/spotify/lib/auth';
+
+const client = new SpotifyClient({
+  auth: {
+    type: 'client_credentials',
+    clientId: process.env['SPOTIFY_CLIENT_ID']!,
+    clientSecret: process.env['SPOTIFY_CLIENT_SECRET']!,
+  },
+});
+
+const featured = await client.browse.getFeaturedPlaylists();
+console.log(featured.playlists.items.map((p) => p.name));
+```
+
+The client automatically fetches and caches an access token using the [Client Credentials flow](https://developer.spotify.com/documentation/web-api/tutorials/client-credentials-flow), refreshing it before expiry.
+
+### Access Token (user-authorized)
+
+Use this when a user has authorized your app via OAuth and you have an access token. Required for user-specific endpoints like `/me`, saved tracks, and user playlists.
+
+<!-- prettier-ignore -->
+```ts
+import { SpotifyClient } from '@stainless-commons/spotify/lib/auth';
+
+const client = new SpotifyClient({
+  auth: process.env['SPOTIFY_ACCESS_TOKEN']!,
+});
+
+const me = await client.me.retrieve();
+console.log(me.display_name);
+```
+
+> [!NOTE]
+> The base `Spotify` client still works for simple access token usage. `SpotifyClient` adds support for additional auth modes and automatic token management.
+
 ### Request & Response types
 
 This library includes TypeScript definitions for all request params and response fields. You may import and use them like so:
