@@ -8,10 +8,12 @@ const client = new Spotify({
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
-describe('resource categories', () => {
+describe('resource library', () => {
   // Prism tests are disabled
-  test.skip('retrieve', async () => {
-    const responsePromise = client.browse.categories.retrieve('dinner');
+  test.skip('checkSavedItems: only required params', async () => {
+    const responsePromise = client.me.library.checkSavedItems({
+      uris: 'spotify:track:7a3LWj5xSFhFRYmztS8wgK,spotify:album:4aawyAB9vmqN3uQ7FjRGTy,spotify:artist:2takcwOaAZWiXQijPHIx7B',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -22,16 +24,17 @@ describe('resource categories', () => {
   });
 
   // Prism tests are disabled
-  test.skip('retrieve: request options and params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.browse.categories.retrieve('dinner', { locale: 'sv_SE' }, { path: '/_stainless_unknown_path' }),
-    ).rejects.toThrow(Spotify.NotFoundError);
+  test.skip('checkSavedItems: required and optional params', async () => {
+    const response = await client.me.library.checkSavedItems({
+      uris: 'spotify:track:7a3LWj5xSFhFRYmztS8wgK,spotify:album:4aawyAB9vmqN3uQ7FjRGTy,spotify:artist:2takcwOaAZWiXQijPHIx7B',
+    });
   });
 
   // Prism tests are disabled
-  test.skip('list', async () => {
-    const responsePromise = client.browse.categories.list();
+  test.skip('removeItems: only required params', async () => {
+    const responsePromise = client.me.library.removeItems({
+      uris: 'spotify:track:7a3LWj5xSFhFRYmztS8wgK,spotify:album:4aawyAB9vmqN3uQ7FjRGTy',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -42,23 +45,17 @@ describe('resource categories', () => {
   });
 
   // Prism tests are disabled
-  test.skip('list: request options and params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.browse.categories.list(
-        {
-          limit: 10,
-          locale: 'sv_SE',
-          offset: 5,
-        },
-        { path: '/_stainless_unknown_path' },
-      ),
-    ).rejects.toThrow(Spotify.NotFoundError);
+  test.skip('removeItems: required and optional params', async () => {
+    const response = await client.me.library.removeItems({
+      uris: 'spotify:track:7a3LWj5xSFhFRYmztS8wgK,spotify:album:4aawyAB9vmqN3uQ7FjRGTy',
+    });
   });
 
   // Prism tests are disabled
-  test.skip('getPlaylists', async () => {
-    const responsePromise = client.browse.categories.getPlaylists('dinner');
+  test.skip('saveItems: only required params', async () => {
+    const responsePromise = client.me.library.saveItems({
+      uris: 'spotify:track:7a3LWj5xSFhFRYmztS8wgK,spotify:album:4aawyAB9vmqN3uQ7FjRGTy',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -69,14 +66,9 @@ describe('resource categories', () => {
   });
 
   // Prism tests are disabled
-  test.skip('getPlaylists: request options and params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.browse.categories.getPlaylists(
-        'dinner',
-        { limit: 10, offset: 5 },
-        { path: '/_stainless_unknown_path' },
-      ),
-    ).rejects.toThrow(Spotify.NotFoundError);
+  test.skip('saveItems: required and optional params', async () => {
+    const response = await client.me.library.saveItems({
+      uris: 'spotify:track:7a3LWj5xSFhFRYmztS8wgK,spotify:album:4aawyAB9vmqN3uQ7FjRGTy',
+    });
   });
 });

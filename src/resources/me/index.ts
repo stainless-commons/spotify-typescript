@@ -39,6 +39,13 @@ export {
   type FollowingFollowParams,
   type FollowingUnfollowParams,
 } from './following';
+export {
+  Library,
+  type LibraryCheckSavedItemsResponse,
+  type LibraryCheckSavedItemsParams,
+  type LibraryRemoveItemsParams,
+  type LibrarySaveItemsParams,
+} from './library';
 export { Me, type MeRetrieveResponse } from './me';
 export {
   Player,
@@ -62,7 +69,12 @@ export {
   type PlayerTransferParams,
   type PlayerListRecentlyPlayedResponsesCursorURLPage,
 } from './player/index';
-export { Playlists, type PlaylistListParams } from './playlists';
+export {
+  Playlists,
+  type PlaylistCreateResponse,
+  type PlaylistCreateParams,
+  type PlaylistListParams,
+} from './playlists';
 export {
   Shows,
   type ShowListResponse,

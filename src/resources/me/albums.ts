@@ -31,12 +31,11 @@ export class Albums extends APIResource {
    * Check if one or more albums is already saved in the current Spotify user's 'Your
    * Music' library.
    *
-   * @example
-   * ```ts
-   * const response = await client.me.albums.check({
-   *   ids: '382ObEPsp2rxGrnsizN5TX,1A2GTWGtFfWp7KSQTwWOyo,2noRn2Aes5aoNVsU6iWThc',
-   * });
-   * ```
+   * **Note:** This endpoint is deprecated. Use
+   * [Check User's Saved Items](/documentation/web-api/reference/check-library-contains)
+   * instead.
+   *
+   * @deprecated
    */
   check(query: AlbumCheckParams, options?: RequestOptions): APIPromise<AlbumCheckResponse> {
     return this._client.get('/me/albums/contains', { query, ...options });
@@ -45,10 +44,11 @@ export class Albums extends APIResource {
   /**
    * Remove one or more albums from the current user's 'Your Music' library.
    *
-   * @example
-   * ```ts
-   * await client.me.albums.remove();
-   * ```
+   * **Note:** This endpoint is deprecated. Use
+   * [Remove Items from Library](/documentation/web-api/reference/remove-library-items)
+   * instead.
+   *
+   * @deprecated
    */
   remove(body: AlbumRemoveParams | null | undefined = {}, options?: RequestOptions): APIPromise<void> {
     return this._client.delete('/me/albums', {
@@ -61,10 +61,11 @@ export class Albums extends APIResource {
   /**
    * Save one or more albums to the current user's 'Your Music' library.
    *
-   * @example
-   * ```ts
-   * await client.me.albums.save();
-   * ```
+   * **Note:** This endpoint is deprecated. Use
+   * [Save Items to Library](/documentation/web-api/reference/save-library-items)
+   * instead.
+   *
+   * @deprecated
    */
   save(body: AlbumSaveParams | null | undefined = {}, options?: RequestOptions): APIPromise<void> {
     return this._client.put('/me/albums', {
@@ -119,7 +120,7 @@ export namespace AlbumListResponse {
     album_type: 'album' | 'single' | 'compilation';
 
     /**
-     * The markets in which the album is available:
+     * @deprecated The markets in which the album is available:
      * [ISO 3166-1 alpha-2 country codes](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).
      * _**NOTE**: an album is considered available in a market when at least 1 of its
      * tracks is available in that market._
@@ -185,7 +186,7 @@ export namespace AlbumListResponse {
     copyrights?: Array<Shared.CopyrightObject>;
 
     /**
-     * Known external IDs for the album.
+     * @deprecated Known external IDs for the album.
      */
     external_ids?: Shared.ExternalIDObject;
 
@@ -195,13 +196,13 @@ export namespace AlbumListResponse {
     genres?: Array<string>;
 
     /**
-     * The label associated with the album.
+     * @deprecated The label associated with the album.
      */
     label?: string;
 
     /**
-     * The popularity of the album. The value will be between 0 and 100, with 100 being
-     * the most popular.
+     * @deprecated The popularity of the album. The value will be between 0 and 100,
+     * with 100 being the most popular.
      */
     popularity?: number;
 

@@ -4,7 +4,7 @@
 
 This library provides convenient access to the Spotify REST API from server-side TypeScript or JavaScript.
 
-The REST API documentation can be found on [spotify.cjav.dev](https://spotify.cjav.dev). The full API of this library can be found in [api.md](api.md).
+The REST API documentation can be found on [stainless.com](https://stainless.com). The full API of this library can be found in [api.md](api.md).
 
 It is generated with [Stainless](https://www.stainless.com/).
 
@@ -25,9 +25,7 @@ The full API of this library can be found in [api.md](api.md).
 ```js
 import Spotify from '@stainless-commons/spotify';
 
-const client = new Spotify({
-  accessToken: process.env['SPOTIFY_ACCESS_TOKEN'], // This is the default and can be omitted
-});
+const client = new Spotify();
 
 const album = await client.albums.retrieve('4aawyAB9vmqN3uQ7FjRGTy');
 
@@ -87,9 +85,7 @@ This library includes TypeScript definitions for all request params and response
 ```ts
 import Spotify from '@stainless-commons/spotify';
 
-const client = new Spotify({
-  accessToken: process.env['SPOTIFY_ACCESS_TOKEN'], // This is the default and can be omitted
-});
+const client = new Spotify();
 
 const album: Spotify.AlbumRetrieveResponse = await client.albums.retrieve('4aawyAB9vmqN3uQ7FjRGTy');
 ```

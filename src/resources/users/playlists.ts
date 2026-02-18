@@ -10,17 +10,14 @@ import { path } from '../../internal/utils/path';
 
 export class Playlists extends APIResource {
   /**
+   * **Deprecated**: Use
+   * [Create Playlist](/documentation/web-api/reference/create-playlist) instead.
+   *
    * Create a playlist for a Spotify user. (The playlist will be empty until you
    * [add tracks](/documentation/web-api/reference/add-tracks-to-playlist).) Each
    * user is generally limited to a maximum of 11000 playlists.
    *
-   * @example
-   * ```ts
-   * const playlist = await client.users.playlists.create(
-   *   'smedjan',
-   *   { name: 'New Playlist' },
-   * );
-   * ```
+   * @deprecated
    */
   create(
     userID: string,
@@ -33,15 +30,7 @@ export class Playlists extends APIResource {
   /**
    * Get a list of the playlists owned or followed by a Spotify user.
    *
-   * @example
-   * ```ts
-   * // Automatically fetches more pages as needed.
-   * for await (const simplifiedPlaylistObject of client.users.playlists.list(
-   *   'smedjan',
-   * )) {
-   *   // ...
-   * }
-   * ```
+   * @deprecated
    */
   list(
     userID: string,
@@ -99,6 +88,12 @@ export interface PlaylistCreateResponse {
   images?: Array<Shared.ImageObject>;
 
   /**
+   * The items of the playlist. _**Note**: This field is only available for playlists
+   * owned by the current user or playlists the user is a collaborator of._
+   */
+  items?: PlaylistCreateResponse.Items;
+
+  /**
    * The name of the playlist.
    */
   name?: string;
@@ -124,7 +119,7 @@ export interface PlaylistCreateResponse {
   snapshot_id?: string;
 
   /**
-   * The tracks of the playlist.
+   * @deprecated **Deprecated:** Use `items` instead. The tracks of the playlist.
    */
   tracks?: PlaylistCreateResponse.Tracks;
 
@@ -142,6 +137,53 @@ export interface PlaylistCreateResponse {
 
 export namespace PlaylistCreateResponse {
   /**
+   * The items of the playlist. _**Note**: This field is only available for playlists
+   * owned by the current user or playlists the user is a collaborator of._
+   */
+  export interface Items {
+    /**
+     * A link to the Web API endpoint returning the full result of the request
+     */
+    href: string;
+
+    /**
+     * The maximum number of items in the response (as set in the query or by default).
+     */
+    limit: number;
+
+    /**
+     * URL to the next page of items. ( `null` if none)
+     */
+    next: string | null;
+
+    /**
+     * The offset of the items returned (as set in the query or by default)
+     */
+    offset: number;
+
+    /**
+     * URL to the previous page of items. ( `null` if none)
+     */
+    previous: string | null;
+
+    /**
+     * The total number of items available to return.
+     */
+    total: number;
+
+    items?: Array<Shared.PlaylistTrackObject>;
+
+    /**
+     * The playlist's public/private status (if it should be added to the user's
+     * profile or not): `true` the playlist will be public, `false` the playlist will
+     * be private, `null` the playlist status is not relevant. For more about
+     * public/private status, see
+     * [Working with Playlists](/documentation/web-api/concepts/playlists)
+     */
+    published?: boolean;
+  }
+
+  /**
    * The user who owns the playlist
    */
   export interface Owner extends Shared.PlaylistUserObject {
@@ -152,7 +194,7 @@ export namespace PlaylistCreateResponse {
   }
 
   /**
-   * The tracks of the playlist.
+   * @deprecated **Deprecated:** Use `items` instead. The tracks of the playlist.
    */
   export interface Tracks {
     /**

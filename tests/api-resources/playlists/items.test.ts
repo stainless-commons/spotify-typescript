@@ -8,10 +8,10 @@ const client = new Spotify({
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
-describe('resource categories', () => {
+describe('resource items', () => {
   // Prism tests are disabled
-  test.skip('retrieve', async () => {
-    const responsePromise = client.browse.categories.retrieve('dinner');
+  test.skip('update', async () => {
+    const responsePromise = client.playlists.items.update('3cEYpjA9oz9GiPac4AsH4n');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -22,16 +22,28 @@ describe('resource categories', () => {
   });
 
   // Prism tests are disabled
-  test.skip('retrieve: request options and params are passed correctly', async () => {
+  test.skip('update: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.browse.categories.retrieve('dinner', { locale: 'sv_SE' }, { path: '/_stainless_unknown_path' }),
+      client.playlists.items.update(
+        '3cEYpjA9oz9GiPac4AsH4n',
+        {
+          query_uris: 'uris',
+          insert_before: 3,
+          published: true,
+          range_length: 2,
+          range_start: 1,
+          snapshot_id: 'snapshot_id',
+          body_uris: ['string'],
+        },
+        { path: '/_stainless_unknown_path' },
+      ),
     ).rejects.toThrow(Spotify.NotFoundError);
   });
 
   // Prism tests are disabled
   test.skip('list', async () => {
-    const responsePromise = client.browse.categories.list();
+    const responsePromise = client.playlists.items.list('3cEYpjA9oz9GiPac4AsH4n');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -45,10 +57,13 @@ describe('resource categories', () => {
   test.skip('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.browse.categories.list(
+      client.playlists.items.list(
+        '3cEYpjA9oz9GiPac4AsH4n',
         {
+          additional_types: 'additional_types',
+          fields: 'items(added_by.id,track(name,href,album(name,href)))',
           limit: 10,
-          locale: 'sv_SE',
+          market: 'ES',
           offset: 5,
         },
         { path: '/_stainless_unknown_path' },
@@ -57,8 +72,8 @@ describe('resource categories', () => {
   });
 
   // Prism tests are disabled
-  test.skip('getPlaylists', async () => {
-    const responsePromise = client.browse.categories.getPlaylists('dinner');
+  test.skip('add', async () => {
+    const responsePromise = client.playlists.items.add('3cEYpjA9oz9GiPac4AsH4n');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -69,14 +84,41 @@ describe('resource categories', () => {
   });
 
   // Prism tests are disabled
-  test.skip('getPlaylists: request options and params are passed correctly', async () => {
+  test.skip('add: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.browse.categories.getPlaylists(
-        'dinner',
-        { limit: 10, offset: 5 },
+      client.playlists.items.add(
+        '3cEYpjA9oz9GiPac4AsH4n',
+        {
+          query_position: 0,
+          query_uris: 'spotify:track:4iV5W9uYEdYUVa79Axb7Rh,spotify:track:1301WleyT98MSxVHPZCA6M',
+          body_position: 0,
+          published: true,
+          body_uris: ['string'],
+        },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Spotify.NotFoundError);
+  });
+
+  // Prism tests are disabled
+  test.skip('remove: only required params', async () => {
+    const responsePromise = client.playlists.items.remove('3cEYpjA9oz9GiPac4AsH4n', { items: [{}] });
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  // Prism tests are disabled
+  test.skip('remove: required and optional params', async () => {
+    const response = await client.playlists.items.remove('3cEYpjA9oz9GiPac4AsH4n', {
+      items: [{ uri: 'uri' }],
+      published: true,
+      snapshot_id: 'snapshot_id',
+    });
   });
 });
