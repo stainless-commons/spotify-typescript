@@ -74,9 +74,9 @@ describe('SpotifyClient', () => {
       // Second request is the API call with the fetched token
       const apiHeaders = requests[1]!.init?.headers;
       const authHeader =
-        apiHeaders instanceof Headers
-          ? apiHeaders.get('authorization')
-          : (apiHeaders as Record<string, string>)?.['authorization'];
+        apiHeaders instanceof Headers ?
+          apiHeaders.get('authorization')
+        : (apiHeaders as Record<string, string>)?.['authorization'];
       expect(authHeader).toBe('Bearer cc-token');
     });
 

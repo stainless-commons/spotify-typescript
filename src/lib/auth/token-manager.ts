@@ -68,7 +68,9 @@ export class TokenManager {
     if (!response.ok) {
       const body = await response.text().catch(() => '');
       throw new Error(
-        `Failed to fetch client credentials token: ${response.status} ${response.statusText}${body ? ` - ${body}` : ''}`,
+        `Failed to fetch client credentials token: ${response.status} ${response.statusText}${
+          body ? ` - ${body}` : ''
+        }`,
       );
     }
 

@@ -15,15 +15,11 @@ export class SpotifyClient extends Spotify {
 
   constructor(options: SpotifyClientOptions) {
     if (!options.auth) {
-      throw new Error(
-        'The `auth` option is required. Pass an access token string or an AuthConfig object.',
-      );
+      throw new Error('The `auth` option is required. Pass an access token string or an AuthConfig object.');
     }
 
     const authConfig: AuthConfig =
-      typeof options.auth === 'string'
-        ? { type: 'access_token', accessToken: options.auth }
-        : options.auth;
+      typeof options.auth === 'string' ? { type: 'access_token', accessToken: options.auth } : options.auth;
 
     const { auth: _auth, ...baseOptions } = options;
     super(baseOptions);
