@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.1 (2026-02-18)
+
+Full Changelog: [v0.2.0...v0.2.1](https://github.com/stainless-commons/spotify-typescript/compare/v0.2.0...v0.2.1)
+
+### Chores
+
+* **internal/client:** fix form-urlencoded requests ([bf855d8](https://github.com/stainless-commons/spotify-typescript/commit/bf855d8438a6ca4b932d714daffde893b036b336))
+
 ## 0.2.0 (2026-02-17)
 
 Full Changelog: [v0.1.0...v0.2.0](https://github.com/stainless-commons/spotify-typescript/compare/v0.1.0...v0.2.0)
