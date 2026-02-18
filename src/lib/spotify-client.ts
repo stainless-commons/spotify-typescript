@@ -25,10 +25,8 @@ export class SpotifyClient extends Spotify {
         ? { type: 'access_token', accessToken: options.auth }
         : options.auth;
 
-    const accessToken =
-      authConfig.type === 'access_token' ? authConfig.accessToken : '__deferred__';
-
-    super({ ...options, accessToken });
+    const { auth: _auth, ...baseOptions } = options;
+    super(baseOptions);
 
     this.authConfig = authConfig;
     this.tokenManager = new TokenManager({
