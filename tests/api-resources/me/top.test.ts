@@ -3,7 +3,8 @@
 import Spotify from '@stainless-commons/spotify';
 
 const client = new Spotify({
-  accessToken: 'My Access Token',
+  clientID: 'My Client ID',
+  clientSecret: 'My Client Secret',
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 

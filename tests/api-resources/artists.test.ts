@@ -3,7 +3,8 @@
 import Spotify from '@stainless-commons/spotify';
 
 const client = new Spotify({
-  accessToken: 'My Access Token',
+  clientID: 'My Client ID',
+  clientSecret: 'My Client Secret',
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
@@ -61,7 +62,7 @@ describe('resource artists', () => {
         '0TnOYISbd1XYRBk9myaseg',
         {
           include_groups: 'single,appears_on',
-          limit: 10,
+          limit: 5,
           market: 'ES',
           offset: 5,
         },

@@ -108,6 +108,7 @@ import { UserRetrieveProfileResponse, Users } from './resources/users/users';
 import { type Fetch } from './internal/builtin-types';
 import { HeadersLike, NullableHeaders, buildHeaders } from './internal/headers';
 import { FinalRequestOptions, RequestOptions } from './internal/request-options';
+import { toBase64 } from './internal/utils/base64';
 import { readEnv } from './internal/utils/env';
 import {
   type LogLevel,
@@ -120,9 +121,14 @@ import { isEmptyObj } from './internal/utils/values';
 
 export interface ClientOptions {
   /**
-   * Defaults to process.env['SPOTIFY_ACCESS_TOKEN'].
+   * Defaults to process.env['SPOTIFY_CLIENT_ID'].
    */
-  accessToken?: string | undefined;
+  clientID?: string | null | undefined;
+
+  /**
+   * Defaults to process.env['SPOTIFY_CLIENT_SECRET'].
+   */
+  clientSecret?: string | null | undefined;
 
   /**
    * Override the default base URL for the API, e.g., "https://api.example.com/v2/"
@@ -197,7 +203,8 @@ export interface ClientOptions {
  * API Client for interfacing with the Spotify API.
  */
 export class Spotify {
-  accessToken: string;
+  clientID: string | null;
+  clientSecret: string | null;
 
   baseURL: string;
   maxRetries: number;
@@ -214,7 +221,8 @@ export class Spotify {
   /**
    * API Client for interfacing with the Spotify API.
    *
-   * @param {string | undefined} [opts.accessToken=process.env['SPOTIFY_ACCESS_TOKEN'] ?? undefined]
+   * @param {string | null | undefined} [opts.clientID=process.env['SPOTIFY_CLIENT_ID'] ?? null]
+   * @param {string | null | undefined} [opts.clientSecret=process.env['SPOTIFY_CLIENT_SECRET'] ?? null]
    * @param {string} [opts.baseURL=process.env['SPOTIFY_BASE_URL'] ?? https://api.spotify.com/v1] - Override the default base URL for the API.
    * @param {number} [opts.timeout=1 minute] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
    * @param {MergedRequestInit} [opts.fetchOptions] - Additional `RequestInit` options to be passed to `fetch` calls.
@@ -225,17 +233,13 @@ export class Spotify {
    */
   constructor({
     baseURL = readEnv('SPOTIFY_BASE_URL'),
-    accessToken = readEnv('SPOTIFY_ACCESS_TOKEN'),
+    clientID = readEnv('SPOTIFY_CLIENT_ID') ?? null,
+    clientSecret = readEnv('SPOTIFY_CLIENT_SECRET') ?? null,
     ...opts
   }: ClientOptions = {}) {
-    if (accessToken === undefined) {
-      throw new Errors.SpotifyError(
-        "The SPOTIFY_ACCESS_TOKEN environment variable is missing or empty; either provide it, or instantiate the Spotify client with an accessToken option, like new Spotify({ accessToken: 'My Access Token' }).",
-      );
-    }
-
     const options: ClientOptions = {
-      accessToken,
+      clientID,
+      clientSecret,
       ...opts,
       baseURL: baseURL || `https://api.spotify.com/v1`,
     };
@@ -257,7 +261,8 @@ export class Spotify {
 
     this._options = options;
 
-    this.accessToken = accessToken;
+    this.clientID = clientID;
+    this.clientSecret = clientSecret;
   }
 
   /**
@@ -273,9 +278,11 @@ export class Spotify {
       logLevel: this.logLevel,
       fetch: this.fetch,
       fetchOptions: this.fetchOptions,
-      accessToken: this.accessToken,
+      clientID: this.clientID,
+      clientSecret: this.clientSecret,
       ...options,
     });
+    client.oauth2_0AuthState = this.oauth2_0AuthState;
     return client;
   }
 
@@ -294,8 +301,72 @@ export class Spotify {
     return;
   }
 
+  private oauth2_0AuthState:
+    | {
+        promise: Promise<{
+          access_token: string;
+          token_type: string;
+          expires_in: number;
+          expires_at: Date;
+          refresh_token?: string;
+        }>;
+        clientID: string;
+        clientSecret: string;
+      }
+    | undefined;
   protected async authHeaders(opts: FinalRequestOptions): Promise<NullableHeaders | undefined> {
-    return buildHeaders([{ Authorization: `Bearer ${this.accessToken}` }]);
+    if (!this.clientID || !this.clientSecret) {
+      return undefined;
+    }
+
+    // Invalidate the cache if the token is expired
+    if (this.oauth2_0AuthState && +(await this.oauth2_0AuthState.promise).expires_at < Date.now()) {
+      this.oauth2_0AuthState = undefined;
+    }
+
+    // Invalidate the cache if the relevant state has been changed
+    if (
+      this.oauth2_0AuthState &&
+      this.oauth2_0AuthState.clientID !== this.clientID &&
+      this.oauth2_0AuthState.clientSecret !== this.clientSecret
+    ) {
+      this.oauth2_0AuthState = undefined;
+    }
+
+    if (!this.oauth2_0AuthState) {
+      this.oauth2_0AuthState = {
+        promise: this.fetch(this.buildURL('https://accounts.spotify.com/api/token', {}), {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            Authorization: `Basic ${toBase64(`${this.clientID}:${this.clientSecret}`)}`,
+          },
+          body: 'grant_type=client_credentials',
+        }).then(async (res) => {
+          if (!res.ok) {
+            const errText = await res.text().catch(() => '');
+            const errJSON = errText ? safeJSON(errText) : undefined;
+            const errMessage = errJSON ? undefined : errText;
+            throw this.makeStatusError(res.status, errJSON, errMessage, res.headers);
+          }
+          const json = (await res.json()) as {
+            access_token: string;
+            token_type: string;
+            expires_in: number;
+            refresh_token?: string;
+          };
+          const now = new Date();
+          now.setSeconds(now.getSeconds() + json.expires_in);
+          return { ...json, expires_at: now };
+        }),
+        clientID: this.clientID,
+        clientSecret: this.clientSecret,
+      };
+    }
+
+    const token = await this.oauth2_0AuthState.promise;
+
+    return buildHeaders([{ Authorization: `Bearer ${token.access_token}` }]);
   }
 
   protected stringifyQuery(query: Record<string, unknown>): string {
@@ -621,6 +692,13 @@ export class Spotify {
     // If the server explicitly says whether or not to retry, obey.
     if (shouldRetryHeader === 'true') return true;
     if (shouldRetryHeader === 'false') return false;
+
+    // Retry if the token has expired
+    const oauth2_0Auth = await this.oauth2_0AuthState?.promise;
+    if (response.status === 401 && oauth2_0Auth && +oauth2_0Auth.expires_at - Date.now() < 10 * 1000) {
+      this.oauth2_0AuthState = undefined;
+      return true;
+    }
 
     // Retry on request timeouts.
     if (response.status === 408) return true;
