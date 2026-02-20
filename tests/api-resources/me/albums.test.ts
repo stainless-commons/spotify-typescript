@@ -9,7 +9,7 @@ const client = new Spotify({
 });
 
 describe('resource albums', () => {
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('list', async () => {
     const responsePromise = client.me.albums.list();
     const rawResponse = await responsePromise.asResponse();
@@ -21,7 +21,7 @@ describe('resource albums', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
@@ -36,7 +36,7 @@ describe('resource albums', () => {
     ).rejects.toThrow(Spotify.NotFoundError);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('check: only required params', async () => {
     const responsePromise = client.me.albums.check({
       ids: '382ObEPsp2rxGrnsizN5TX,1A2GTWGtFfWp7KSQTwWOyo,2noRn2Aes5aoNVsU6iWThc',
@@ -50,14 +50,14 @@ describe('resource albums', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('check: required and optional params', async () => {
     const response = await client.me.albums.check({
       ids: '382ObEPsp2rxGrnsizN5TX,1A2GTWGtFfWp7KSQTwWOyo,2noRn2Aes5aoNVsU6iWThc',
     });
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('remove', async () => {
     const responsePromise = client.me.albums.remove();
     const rawResponse = await responsePromise.asResponse();
@@ -69,7 +69,7 @@ describe('resource albums', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('remove: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
@@ -77,7 +77,7 @@ describe('resource albums', () => {
     ).rejects.toThrow(Spotify.NotFoundError);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('save', async () => {
     const responsePromise = client.me.albums.save();
     const rawResponse = await responsePromise.asResponse();
@@ -89,7 +89,7 @@ describe('resource albums', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('save: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(

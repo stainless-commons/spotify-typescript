@@ -9,7 +9,7 @@ const client = new Spotify({
 });
 
 describe('resource player', () => {
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('getCurrentlyPlaying', async () => {
     const responsePromise = client.me.player.getCurrentlyPlaying();
     const rawResponse = await responsePromise.asResponse();
@@ -21,7 +21,7 @@ describe('resource player', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('getCurrentlyPlaying: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
@@ -32,7 +32,7 @@ describe('resource player', () => {
     ).rejects.toThrow(Spotify.NotFoundError);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('getDevices', async () => {
     const responsePromise = client.me.player.getDevices();
     const rawResponse = await responsePromise.asResponse();
@@ -44,7 +44,7 @@ describe('resource player', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('getState', async () => {
     const responsePromise = client.me.player.getState();
     const rawResponse = await responsePromise.asResponse();
@@ -56,7 +56,7 @@ describe('resource player', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('getState: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
@@ -67,7 +67,7 @@ describe('resource player', () => {
     ).rejects.toThrow(Spotify.NotFoundError);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('listRecentlyPlayed', async () => {
     const responsePromise = client.me.player.listRecentlyPlayed();
     const rawResponse = await responsePromise.asResponse();
@@ -79,7 +79,7 @@ describe('resource player', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('listRecentlyPlayed: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
@@ -94,7 +94,7 @@ describe('resource player', () => {
     ).rejects.toThrow(Spotify.NotFoundError);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('pausePlayback', async () => {
     const responsePromise = client.me.player.pausePlayback();
     const rawResponse = await responsePromise.asResponse();
@@ -106,7 +106,7 @@ describe('resource player', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('pausePlayback: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
@@ -117,7 +117,7 @@ describe('resource player', () => {
     ).rejects.toThrow(Spotify.NotFoundError);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('seekToPosition: only required params', async () => {
     const responsePromise = client.me.player.seekToPosition({ position_ms: 25000 });
     const rawResponse = await responsePromise.asResponse();
@@ -129,7 +129,7 @@ describe('resource player', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('seekToPosition: required and optional params', async () => {
     const response = await client.me.player.seekToPosition({
       position_ms: 25000,
@@ -137,7 +137,7 @@ describe('resource player', () => {
     });
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('setRepeatMode: only required params', async () => {
     const responsePromise = client.me.player.setRepeatMode({ state: 'context' });
     const rawResponse = await responsePromise.asResponse();
@@ -149,7 +149,7 @@ describe('resource player', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('setRepeatMode: required and optional params', async () => {
     const response = await client.me.player.setRepeatMode({
       state: 'context',
@@ -157,7 +157,7 @@ describe('resource player', () => {
     });
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('setVolume: only required params', async () => {
     const responsePromise = client.me.player.setVolume({ volume_percent: 50 });
     const rawResponse = await responsePromise.asResponse();
@@ -169,7 +169,7 @@ describe('resource player', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('setVolume: required and optional params', async () => {
     const response = await client.me.player.setVolume({
       volume_percent: 50,
@@ -177,7 +177,7 @@ describe('resource player', () => {
     });
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('skipNext', async () => {
     const responsePromise = client.me.player.skipNext();
     const rawResponse = await responsePromise.asResponse();
@@ -189,7 +189,7 @@ describe('resource player', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('skipNext: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
@@ -200,7 +200,7 @@ describe('resource player', () => {
     ).rejects.toThrow(Spotify.NotFoundError);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('skipPrevious', async () => {
     const responsePromise = client.me.player.skipPrevious();
     const rawResponse = await responsePromise.asResponse();
@@ -212,7 +212,7 @@ describe('resource player', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('skipPrevious: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
@@ -223,7 +223,7 @@ describe('resource player', () => {
     ).rejects.toThrow(Spotify.NotFoundError);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('startPlayback', async () => {
     const responsePromise = client.me.player.startPlayback();
     const rawResponse = await responsePromise.asResponse();
@@ -235,7 +235,7 @@ describe('resource player', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('startPlayback: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
@@ -253,7 +253,7 @@ describe('resource player', () => {
     ).rejects.toThrow(Spotify.NotFoundError);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('toggleShuffle: only required params', async () => {
     const responsePromise = client.me.player.toggleShuffle({ state: true });
     const rawResponse = await responsePromise.asResponse();
@@ -265,7 +265,7 @@ describe('resource player', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('toggleShuffle: required and optional params', async () => {
     const response = await client.me.player.toggleShuffle({
       state: true,
@@ -273,7 +273,7 @@ describe('resource player', () => {
     });
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('transfer: only required params', async () => {
     const responsePromise = client.me.player.transfer({ device_ids: ['74ASZWbe4lXaubB36ztrGX'] });
     const rawResponse = await responsePromise.asResponse();
@@ -285,7 +285,7 @@ describe('resource player', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('transfer: required and optional params', async () => {
     const response = await client.me.player.transfer({
       device_ids: ['74ASZWbe4lXaubB36ztrGX'],

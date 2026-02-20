@@ -9,7 +9,7 @@ const client = new Spotify({
 });
 
 describe('resource items', () => {
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('update', async () => {
     const responsePromise = client.playlists.items.update('3cEYpjA9oz9GiPac4AsH4n');
     const rawResponse = await responsePromise.asResponse();
@@ -21,7 +21,7 @@ describe('resource items', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('update: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
@@ -41,7 +41,7 @@ describe('resource items', () => {
     ).rejects.toThrow(Spotify.NotFoundError);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('list', async () => {
     const responsePromise = client.playlists.items.list('3cEYpjA9oz9GiPac4AsH4n');
     const rawResponse = await responsePromise.asResponse();
@@ -53,7 +53,7 @@ describe('resource items', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
@@ -71,7 +71,7 @@ describe('resource items', () => {
     ).rejects.toThrow(Spotify.NotFoundError);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('add', async () => {
     const responsePromise = client.playlists.items.add('3cEYpjA9oz9GiPac4AsH4n');
     const rawResponse = await responsePromise.asResponse();
@@ -83,7 +83,7 @@ describe('resource items', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('add: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
@@ -101,7 +101,7 @@ describe('resource items', () => {
     ).rejects.toThrow(Spotify.NotFoundError);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('remove: only required params', async () => {
     const responsePromise = client.playlists.items.remove('3cEYpjA9oz9GiPac4AsH4n', { items: [{}] });
     const rawResponse = await responsePromise.asResponse();
@@ -113,7 +113,7 @@ describe('resource items', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('remove: required and optional params', async () => {
     const response = await client.playlists.items.remove('3cEYpjA9oz9GiPac4AsH4n', {
       items: [{ uri: 'uri' }],
