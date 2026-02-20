@@ -9,7 +9,7 @@ const client = new Spotify({
 });
 
 describe('resource following', () => {
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('bulkRetrieve: only required params', async () => {
     const responsePromise = client.me.following.bulkRetrieve({ type: 'artist' });
     const rawResponse = await responsePromise.asResponse();
@@ -21,7 +21,7 @@ describe('resource following', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('bulkRetrieve: required and optional params', async () => {
     const response = await client.me.following.bulkRetrieve({
       type: 'artist',
@@ -30,7 +30,7 @@ describe('resource following', () => {
     });
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('check: only required params', async () => {
     const responsePromise = client.me.following.check({
       ids: '2CIMQHirSU0MQqyYHq0eOx,57dN52uHvrHOxijzpIgu3E,1vCWHaC5f2uS3yhpwWbIA6',
@@ -45,7 +45,7 @@ describe('resource following', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('check: required and optional params', async () => {
     const response = await client.me.following.check({
       ids: '2CIMQHirSU0MQqyYHq0eOx,57dN52uHvrHOxijzpIgu3E,1vCWHaC5f2uS3yhpwWbIA6',
@@ -53,7 +53,7 @@ describe('resource following', () => {
     });
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('follow: only required params', async () => {
     const responsePromise = client.me.following.follow({ ids: ['string'] });
     const rawResponse = await responsePromise.asResponse();
@@ -65,12 +65,12 @@ describe('resource following', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('follow: required and optional params', async () => {
     const response = await client.me.following.follow({ ids: ['string'], published: true });
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('unfollow', async () => {
     const responsePromise = client.me.following.unfollow();
     const rawResponse = await responsePromise.asResponse();
@@ -82,7 +82,7 @@ describe('resource following', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('unfollow: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
