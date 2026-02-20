@@ -9,7 +9,7 @@ const client = new Spotify({
 });
 
 describe('resource followers', () => {
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('check', async () => {
     const responsePromise = client.playlists.followers.check('3cEYpjA9oz9GiPac4AsH4n');
     const rawResponse = await responsePromise.asResponse();
@@ -21,7 +21,7 @@ describe('resource followers', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('check: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
@@ -33,7 +33,7 @@ describe('resource followers', () => {
     ).rejects.toThrow(Spotify.NotFoundError);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('follow', async () => {
     const responsePromise = client.playlists.followers.follow('3cEYpjA9oz9GiPac4AsH4n');
     const rawResponse = await responsePromise.asResponse();
@@ -45,7 +45,7 @@ describe('resource followers', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('follow: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
@@ -57,7 +57,7 @@ describe('resource followers', () => {
     ).rejects.toThrow(Spotify.NotFoundError);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('unfollow', async () => {
     const responsePromise = client.playlists.followers.unfollow('3cEYpjA9oz9GiPac4AsH4n');
     const rawResponse = await responsePromise.asResponse();
