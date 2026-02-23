@@ -1,15 +1,16 @@
-import { SpotifyClient } from '@stainless-commons/spotify/lib/auth';
+import { SpotifyClient } from '@stainless-commons/spotify';
 
 /**
  * Access Token flow: user-level auth with a pre-obtained token.
  * Required for user-specific endpoints (/me, saved tracks, user playlists).
  *
- * Required env vars:
- *   SPOTIFY_ACCESS_TOKEN  (user-scoped OAuth token)
+ * If SPOTIFY_ACCESS_TOKEN is set in the environment, you can omit the auth option:
+ *   const client = new SpotifyClient();
+ *
+ * Or pass it explicitly:
+ *   const client = new SpotifyClient({ auth: process.env['SPOTIFY_ACCESS_TOKEN']! });
  */
-const client = new SpotifyClient({
-  auth: process.env['SPOTIFY_ACCESS_TOKEN']!,
-});
+const client = new SpotifyClient();
 
 async function main() {
   const me = await client.me.retrieve();

@@ -1,4 +1,4 @@
-import { SpotifyClient } from '@stainless-commons/spotify/lib/auth';
+import { SpotifyClient } from '@stainless-commons/spotify';
 
 /**
  * Client Credentials flow: app-level auth, no user context.
