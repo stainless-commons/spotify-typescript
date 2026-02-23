@@ -23,14 +23,16 @@ The full API of this library can be found in [api.md](api.md).
 
 <!-- prettier-ignore -->
 ```js
-import Spotify from '@stainless-commons/spotify';
+import { SpotifyClient } from '@stainless-commons/spotify';
 
-const client = new Spotify();
+const client = new SpotifyClient();
 
 const album = await client.albums.retrieve('4aawyAB9vmqN3uQ7FjRGTy');
 
 console.log(album.id);
 ```
+
+If no `auth` option is provided, the client reads the `SPOTIFY_ACCESS_TOKEN` environment variable automatically.
 
 ## Authentication
 
@@ -42,7 +44,7 @@ Use this when your app needs to access Spotify catalog data without a user conte
 
 <!-- prettier-ignore -->
 ```ts
-import { SpotifyClient } from '@stainless-commons/spotify/lib/auth';
+import { SpotifyClient } from '@stainless-commons/spotify';
 
 const client = new SpotifyClient({
   auth: {
@@ -64,11 +66,13 @@ Use this when a user has authorized your app via OAuth and you have an access to
 
 <!-- prettier-ignore -->
 ```ts
-import { SpotifyClient } from '@stainless-commons/spotify/lib/auth';
+import { SpotifyClient } from '@stainless-commons/spotify';
 
-const client = new SpotifyClient({
-  auth: process.env['SPOTIFY_ACCESS_TOKEN']!,
-});
+// Reads SPOTIFY_ACCESS_TOKEN from the environment automatically:
+const client = new SpotifyClient();
+
+// Or pass the token explicitly:
+// const client = new SpotifyClient({ auth: 'my-access-token' });
 
 const me = await client.me.retrieve();
 console.log(me.display_name);
@@ -83,9 +87,10 @@ This library includes TypeScript definitions for all request params and response
 
 <!-- prettier-ignore -->
 ```ts
+import { SpotifyClient } from '@stainless-commons/spotify';
 import Spotify from '@stainless-commons/spotify';
 
-const client = new Spotify();
+const client = new SpotifyClient();
 
 const album: Spotify.AlbumRetrieveResponse = await client.albums.retrieve('4aawyAB9vmqN3uQ7FjRGTy');
 ```
@@ -135,10 +140,9 @@ You can use the `maxRetries` option to configure or disable this:
 <!-- prettier-ignore -->
 ```js
 // Configure the default for all requests:
-const client = new Spotify({
+const client = new SpotifyClient({
   maxRetries: 0, // default is 2
 });
-
 // Or, configure per-request:
 await client.albums.retrieve('4aawyAB9vmqN3uQ7FjRGTy', {
   maxRetries: 5,
@@ -152,7 +156,7 @@ Requests time out after 1 minute by default. You can configure this with a `time
 <!-- prettier-ignore -->
 ```ts
 // Configure the default for all requests:
-const client = new Spotify({
+const client = new SpotifyClient({
   timeout: 20 * 1000, // 20 seconds (default is 1 minute)
 });
 
@@ -212,7 +216,7 @@ Unlike `.asResponse()` this method consumes the body, returning once it is parse
 
 <!-- prettier-ignore -->
 ```ts
-const client = new Spotify();
+const client = new SpotifyClient({ auth });
 
 const response = await client.albums.retrieve('4aawyAB9vmqN3uQ7FjRGTy').asResponse();
 console.log(response.headers.get('X-My-Header'));
@@ -239,9 +243,8 @@ The log level can be configured in two ways:
 2. Using the `logLevel` client option (overrides the environment variable if set)
 
 ```ts
-import Spotify from '@stainless-commons/spotify';
-
-const client = new Spotify({
+const client = new SpotifyClient({
+  auth: process.env['SPOTIFY_AUTH_CLIENT'],
   logLevel: 'debug', // Show all log messages
 });
 ```
@@ -272,7 +275,7 @@ import pino from 'pino';
 
 const logger = pino();
 
-const client = new Spotify({
+const client = new SpotifyClient({
   logger: logger.child({ name: 'Spotify' }),
   logLevel: 'debug', // Send all messages to pino, allowing it to filter
 });
@@ -339,7 +342,7 @@ Or pass it to the client:
 import Spotify from '@stainless-commons/spotify';
 import fetch from 'my-fetch';
 
-const client = new Spotify({ fetch });
+const client = new SpotifyClient({ fetch });
 ```
 
 ### Fetch options
@@ -349,7 +352,7 @@ If you want to set custom `fetch` options without overriding the `fetch` functio
 ```ts
 import Spotify from '@stainless-commons/spotify';
 
-const client = new Spotify({
+const client = new SpotifyClient({
   fetchOptions: {
     // `RequestInit` options
   },
@@ -364,11 +367,11 @@ options to requests:
 <img src="https://raw.githubusercontent.com/stainless-api/sdk-assets/refs/heads/main/node.svg" align="top" width="18" height="21"> **Node** <sup>[[docs](https://github.com/nodejs/undici/blob/main/docs/docs/api/ProxyAgent.md#example---proxyagent-with-fetch)]</sup>
 
 ```ts
-import Spotify from '@stainless-commons/spotify';
+import { SpotifyClient } from '@stainless-commons/spotify';
 import * as undici from 'undici';
 
 const proxyAgent = new undici.ProxyAgent('http://localhost:8888');
-const client = new Spotify({
+const client = new SpotifyClient({
   fetchOptions: {
     dispatcher: proxyAgent,
   },
@@ -378,9 +381,9 @@ const client = new Spotify({
 <img src="https://raw.githubusercontent.com/stainless-api/sdk-assets/refs/heads/main/bun.svg" align="top" width="18" height="21"> **Bun** <sup>[[docs](https://bun.sh/guides/http/proxy)]</sup>
 
 ```ts
-import Spotify from '@stainless-commons/spotify';
+import { SpotifyClient } from '@stainless-commons/spotify';
 
-const client = new Spotify({
+const client = new SpotifyClient({
   fetchOptions: {
     proxy: 'http://localhost:8888',
   },
@@ -390,10 +393,10 @@ const client = new Spotify({
 <img src="https://raw.githubusercontent.com/stainless-api/sdk-assets/refs/heads/main/deno.svg" align="top" width="18" height="21"> **Deno** <sup>[[docs](https://docs.deno.com/api/deno/~/Deno.createHttpClient)]</sup>
 
 ```ts
-import Spotify from 'npm:@stainless-commons/spotify';
+import { SpotifyClient } from 'npm:@stainless-commons/spotify';
 
 const httpClient = Deno.createHttpClient({ proxy: { url: 'http://localhost:8888' } });
-const client = new Spotify({
+const client = new SpotifyClient({
   fetchOptions: {
     client: httpClient,
   },

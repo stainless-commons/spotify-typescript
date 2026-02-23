@@ -6,20 +6,25 @@ import { TokenManager } from './auth/token-manager';
 import type { AuthConfig } from './auth/types';
 
 export interface SpotifyClientOptions extends Omit<ClientOptions, 'accessToken'> {
-  auth: AuthConfig | string;
+  auth?: AuthConfig | string | undefined;
 }
 
 export class SpotifyClient extends Spotify {
   private tokenManager: TokenManager;
   private authConfig: AuthConfig;
 
-  constructor(options: SpotifyClientOptions) {
-    if (!options.auth) {
-      throw new Error('The `auth` option is required. Pass an access token string or an AuthConfig object.');
+  constructor(options: SpotifyClientOptions = {}) {
+    const resolvedAuth = options.auth ?? process.env['SPOTIFY_ACCESS_TOKEN'];
+
+    if (!resolvedAuth) {
+      throw new Error(
+        'No authentication provided. Pass an `auth` option (access token string or AuthConfig object) ' +
+          'or set the SPOTIFY_ACCESS_TOKEN environment variable.',
+      );
     }
 
     const authConfig: AuthConfig =
-      typeof options.auth === 'string' ? { type: 'access_token', accessToken: options.auth } : options.auth;
+      typeof resolvedAuth === 'string' ? { type: 'access_token', accessToken: resolvedAuth } : resolvedAuth;
 
     const { auth: _auth, ...baseOptions } = options;
     super(baseOptions);
