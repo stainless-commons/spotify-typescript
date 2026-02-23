@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.0 (2026-02-23)
+
+Full Changelog: [v0.2.2...v0.3.0](https://github.com/stainless-commons/spotify-typescript/compare/v0.2.2...v0.3.0)
+
+### Features
+
+* **api:** manual updates ([0e051f4](https://github.com/stainless-commons/spotify-typescript/commit/0e051f4ec1d02c0ad7621592e704ce87beb32e79))
+
 ## 0.2.2 (2026-02-20)
 
 Full Changelog: [v0.2.1...v0.2.2](https://github.com/stainless-commons/spotify-typescript/compare/v0.2.1...v0.2.2)
