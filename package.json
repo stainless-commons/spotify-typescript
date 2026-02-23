@@ -1,7 +1,7 @@
 {
   "name": "@stainless-commons/spotify",
   "version": "0.3.0",
-  "description": "The official TypeScript library for the Spotify API",
+  "description": "Stainless Commons TypeScript SDK for the Spotify API",
   "author": "Spotify <commons@stainless.com>",
   "types": "dist/index.d.ts",
   "main": "dist/index.js",
