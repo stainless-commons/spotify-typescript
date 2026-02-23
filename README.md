@@ -1,4 +1,4 @@
-# Stainless Commons Spotify API Library
+# [Stainless](https://stainless.com) Commons Spotify API Library
 
 [![NPM version](<https://img.shields.io/npm/v/@stainless-commons/spotify.svg?label=npm%20(stable)>)](https://npmjs.org/package/@stainless-commons/spotify) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@stainless-commons/spotify)
 
