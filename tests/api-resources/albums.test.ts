@@ -9,7 +9,7 @@ const client = new Spotify({
 });
 
 describe('resource albums', () => {
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('retrieve', async () => {
     const responsePromise = client.albums.retrieve('4aawyAB9vmqN3uQ7FjRGTy');
     const rawResponse = await responsePromise.asResponse();
@@ -21,7 +21,7 @@ describe('resource albums', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('retrieve: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
@@ -33,7 +33,7 @@ describe('resource albums', () => {
     ).rejects.toThrow(Spotify.NotFoundError);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('bulkRetrieve: only required params', async () => {
     const responsePromise = client.albums.bulkRetrieve({
       ids: '382ObEPsp2rxGrnsizN5TX,1A2GTWGtFfWp7KSQTwWOyo,2noRn2Aes5aoNVsU6iWThc',
@@ -47,7 +47,7 @@ describe('resource albums', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('bulkRetrieve: required and optional params', async () => {
     const response = await client.albums.bulkRetrieve({
       ids: '382ObEPsp2rxGrnsizN5TX,1A2GTWGtFfWp7KSQTwWOyo,2noRn2Aes5aoNVsU6iWThc',
@@ -55,7 +55,7 @@ describe('resource albums', () => {
     });
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('listTracks', async () => {
     const responsePromise = client.albums.listTracks('4aawyAB9vmqN3uQ7FjRGTy');
     const rawResponse = await responsePromise.asResponse();
@@ -67,7 +67,7 @@ describe('resource albums', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('listTracks: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(

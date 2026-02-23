@@ -9,7 +9,7 @@ const client = new Spotify({
 });
 
 describe('resource shows', () => {
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('retrieve', async () => {
     const responsePromise = client.shows.retrieve('38bS44xjbVVZ3No3ByF1dJ');
     const rawResponse = await responsePromise.asResponse();
@@ -21,7 +21,7 @@ describe('resource shows', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('retrieve: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
@@ -29,7 +29,7 @@ describe('resource shows', () => {
     ).rejects.toThrow(Spotify.NotFoundError);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('bulkRetrieve: only required params', async () => {
     const responsePromise = client.shows.bulkRetrieve({
       ids: '5CfCWKI5pZ28U0uOzXkDHe,5as3aKmN2k11yfDDDSrvaZ',
@@ -43,7 +43,7 @@ describe('resource shows', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('bulkRetrieve: required and optional params', async () => {
     const response = await client.shows.bulkRetrieve({
       ids: '5CfCWKI5pZ28U0uOzXkDHe,5as3aKmN2k11yfDDDSrvaZ',
@@ -51,7 +51,7 @@ describe('resource shows', () => {
     });
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('listEpisodes', async () => {
     const responsePromise = client.shows.listEpisodes('38bS44xjbVVZ3No3ByF1dJ');
     const rawResponse = await responsePromise.asResponse();
@@ -63,7 +63,7 @@ describe('resource shows', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('listEpisodes: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(

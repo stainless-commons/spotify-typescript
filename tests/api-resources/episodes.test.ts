@@ -9,7 +9,7 @@ const client = new Spotify({
 });
 
 describe('resource episodes', () => {
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('retrieve', async () => {
     const responsePromise = client.episodes.retrieve('512ojhOuo1ktJprKbVcKyQ');
     const rawResponse = await responsePromise.asResponse();
@@ -21,7 +21,7 @@ describe('resource episodes', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('retrieve: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
@@ -33,7 +33,7 @@ describe('resource episodes', () => {
     ).rejects.toThrow(Spotify.NotFoundError);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('bulkRetrieve: only required params', async () => {
     const responsePromise = client.episodes.bulkRetrieve({
       ids: '77o6BIVlYM3msb4MMIL1jH,0Q86acNRm6V9GYx55SXKwf',
@@ -47,7 +47,7 @@ describe('resource episodes', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('bulkRetrieve: required and optional params', async () => {
     const response = await client.episodes.bulkRetrieve({
       ids: '77o6BIVlYM3msb4MMIL1jH,0Q86acNRm6V9GYx55SXKwf',

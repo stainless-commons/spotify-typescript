@@ -9,7 +9,7 @@ const client = new Spotify({
 });
 
 describe('resource audioFeatures', () => {
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('retrieve', async () => {
     const responsePromise = client.audioFeatures.retrieve('11dFghVXANMlKmJXsNCbNl');
     const rawResponse = await responsePromise.asResponse();
@@ -21,7 +21,7 @@ describe('resource audioFeatures', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('bulkRetrieve: only required params', async () => {
     const responsePromise = client.audioFeatures.bulkRetrieve({
       ids: '7ouMYWpwJ422jRcDASZB7P,4VqPOruhp5EdPBeR92t6lQ,2takcwOaAZWiXQijPHIx7B',
@@ -35,7 +35,7 @@ describe('resource audioFeatures', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('bulkRetrieve: required and optional params', async () => {
     const response = await client.audioFeatures.bulkRetrieve({
       ids: '7ouMYWpwJ422jRcDASZB7P,4VqPOruhp5EdPBeR92t6lQ,2takcwOaAZWiXQijPHIx7B',

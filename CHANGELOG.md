@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.2 (2026-02-20)
+
+Full Changelog: [v0.2.1...v0.2.2](https://github.com/stainless-commons/spotify-typescript/compare/v0.2.1...v0.2.2)
+
+### Chores
+
+* **internal:** remove mock server code ([14035d4](https://github.com/stainless-commons/spotify-typescript/commit/14035d4a33e94790f906e6ef5185581519f8a058))
+* update mock server docs ([8d85111](https://github.com/stainless-commons/spotify-typescript/commit/8d851110125a087bd687ebf9e4828d972beb23bd))
+
 ## 0.2.1 (2026-02-18)
 
 Full Changelog: [v0.2.0...v0.2.1](https://github.com/stainless-commons/spotify-typescript/compare/v0.2.0...v0.2.1)

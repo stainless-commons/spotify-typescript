@@ -9,7 +9,7 @@ const client = new Spotify({
 });
 
 describe('resource library', () => {
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('checkSavedItems: only required params', async () => {
     const responsePromise = client.me.library.checkSavedItems({
       uris: 'spotify:track:7a3LWj5xSFhFRYmztS8wgK,spotify:album:4aawyAB9vmqN3uQ7FjRGTy,spotify:artist:2takcwOaAZWiXQijPHIx7B',
@@ -23,14 +23,14 @@ describe('resource library', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('checkSavedItems: required and optional params', async () => {
     const response = await client.me.library.checkSavedItems({
       uris: 'spotify:track:7a3LWj5xSFhFRYmztS8wgK,spotify:album:4aawyAB9vmqN3uQ7FjRGTy,spotify:artist:2takcwOaAZWiXQijPHIx7B',
     });
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('removeItems: only required params', async () => {
     const responsePromise = client.me.library.removeItems({
       uris: 'spotify:track:7a3LWj5xSFhFRYmztS8wgK,spotify:album:4aawyAB9vmqN3uQ7FjRGTy',
@@ -44,14 +44,14 @@ describe('resource library', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('removeItems: required and optional params', async () => {
     const response = await client.me.library.removeItems({
       uris: 'spotify:track:7a3LWj5xSFhFRYmztS8wgK,spotify:album:4aawyAB9vmqN3uQ7FjRGTy',
     });
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('saveItems: only required params', async () => {
     const responsePromise = client.me.library.saveItems({
       uris: 'spotify:track:7a3LWj5xSFhFRYmztS8wgK,spotify:album:4aawyAB9vmqN3uQ7FjRGTy',
@@ -65,7 +65,7 @@ describe('resource library', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('saveItems: required and optional params', async () => {
     const response = await client.me.library.saveItems({
       uris: 'spotify:track:7a3LWj5xSFhFRYmztS8wgK,spotify:album:4aawyAB9vmqN3uQ7FjRGTy',

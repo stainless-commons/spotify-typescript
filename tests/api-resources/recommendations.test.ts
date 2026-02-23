@@ -9,7 +9,7 @@ const client = new Spotify({
 });
 
 describe('resource recommendations', () => {
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('get', async () => {
     const responsePromise = client.recommendations.get();
     const rawResponse = await responsePromise.asResponse();
@@ -21,7 +21,7 @@ describe('resource recommendations', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('get: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
@@ -80,7 +80,7 @@ describe('resource recommendations', () => {
     ).rejects.toThrow(Spotify.NotFoundError);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('listAvailableGenreSeeds', async () => {
     const responsePromise = client.recommendations.listAvailableGenreSeeds();
     const rawResponse = await responsePromise.asResponse();

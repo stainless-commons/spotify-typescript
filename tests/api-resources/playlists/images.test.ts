@@ -9,7 +9,7 @@ const client = new Spotify({
 });
 
 describe('resource images', () => {
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('list', async () => {
     const responsePromise = client.playlists.images.list('3cEYpjA9oz9GiPac4AsH4n');
     const rawResponse = await responsePromise.asResponse();

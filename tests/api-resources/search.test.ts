@@ -9,7 +9,7 @@ const client = new Spotify({
 });
 
 describe('resource search', () => {
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('query: only required params', async () => {
     const responsePromise = client.search.query({
       q: 'remaster%20track:Doxy%20artist:Miles%20Davis',
@@ -24,7 +24,7 @@ describe('resource search', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('query: required and optional params', async () => {
     const response = await client.search.query({
       q: 'remaster%20track:Doxy%20artist:Miles%20Davis',

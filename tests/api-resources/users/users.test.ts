@@ -9,7 +9,7 @@ const client = new Spotify({
 });
 
 describe('resource users', () => {
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('retrieveProfile', async () => {
     const responsePromise = client.users.retrieveProfile('smedjan');
     const rawResponse = await responsePromise.asResponse();
