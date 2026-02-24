@@ -60,7 +60,7 @@ $ yarn link @stainless-commons/spotify
 # With pnpm
 $ pnpm link --global
 $ cd ../my-package
-$ pnpm link -—global @stainless-commons/spotify
+$ pnpm link --global @stainless-commons/spotify
 ```
 
 ## Running tests
