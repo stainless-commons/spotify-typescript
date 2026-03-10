@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.5.0 (2026-03-10)
+
+Full Changelog: [v0.4.0...v0.5.0](https://github.com/stainless-commons/spotify-typescript/compare/v0.4.0...v0.5.0)
+
+### Features
+
+* **api:** api update ([f5b1d5d](https://github.com/stainless-commons/spotify-typescript/commit/f5b1d5de361659231e7dce85d9eaaea58c7a275e))
+
+
+### Bug Fixes
+
+* **client:** preserve URL params already embedded in path ([e5856a1](https://github.com/stainless-commons/spotify-typescript/commit/e5856a1b2b4d98f9676985a2b48c895709e32cab))
+* **docs/contributing:** correct pnpm link command ([2218729](https://github.com/stainless-commons/spotify-typescript/commit/2218729071f9670d3499d27cac7e064da28db02a))
+
+
+### Chores
+
+* **ci:** skip uploading artifacts on stainless-internal branches ([79c0b67](https://github.com/stainless-commons/spotify-typescript/commit/79c0b67c68c33383378838b706eda20d45510d5d))
+* **internal:** codegen related update ([c989f3d](https://github.com/stainless-commons/spotify-typescript/commit/c989f3d049fb2bfb57a643fc966ce7aa1b005516))
+* **internal:** move stringifyQuery implementation to internal function ([6e16469](https://github.com/stainless-commons/spotify-typescript/commit/6e16469e131fee1d5b928d3bf09098bd7fa9a94e))
+* **internal:** update dependencies to address dependabot vulnerabilities ([1a98d5a](https://github.com/stainless-commons/spotify-typescript/commit/1a98d5a46eef1f95d70a4d1044bbeb915e8b523f))
+* **internal:** upgrade pnpm version ([5ac3724](https://github.com/stainless-commons/spotify-typescript/commit/5ac3724a8aad0f4eea633be44a662d58090a0ebc))
+
 ## 0.4.0 (2026-02-23)
 
 Full Changelog: [v0.3.0...v0.4.0](https://github.com/stainless-commons/spotify-typescript/compare/v0.3.0...v0.4.0)
